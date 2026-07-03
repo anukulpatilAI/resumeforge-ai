@@ -1,0 +1,234 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ResumeStatus {
+  DRAFT
+  READY
+  ARCHIVED
+  DELETED
+}
+
+enum AIStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  TIMEOUT
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  fullName     String   @map("full_name")
+  avatarUrl    String?  @map("avatar_url")
+  role         UserRole @default(USER)
+  isVerified   Boolean  @default(false) @map("is_verified")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  resumes       Resume[]
+  refreshTokens RefreshToken[]
+  settings      UserSettings?
+  activityLogs  ActivityLog[]
+  aiLogs        AILog[]
+  careerProfile CareerProfile?
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model CareerProfile {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @unique @map("user_id") @db.Uuid
+  profileJson Json   @map("profile_json") @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("career_profiles")
+}
+
+model Resume {
+  id              String       @id @default(uuid()) @db.Uuid
+  userId          String       @map("user_id") @db.Uuid
+  title           String       @default("My Resume")
+  targetRole      String?      @map("target_role")
+  experienceLevel String?      @map("experience_level")
+  industry        String?
+  templateId      String?      @map("template_id") @db.Uuid
+  status          ResumeStatus @default(DRAFT)
+  currentVersion  Int          @default(1) @map("current_version")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+  deletedAt       DateTime?    @map("deleted_at")
+
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template      Template?        @relation(fields: [templateId], references: [id])
+  versions      ResumeVersion[]
+  atsReports    ATSReport[]
+  generatedPdfs GeneratedPDF[]
+  aiLogs        AILog[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("resumes")
+}
+
+model ResumeVersion {
+  id         String   @id @default(uuid()) @db.Uuid
+  resumeId   String   @map("resume_id") @db.Uuid
+  version    Int
+  resumeJson Json     @map("resume_json") @db.JsonB
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@unique([resumeId, version])
+  @@index([resumeId])
+  @@map("resume_versions")
+}
+
+model Template {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  slug         String   @unique
+  previewImage String?  @map("preview_image")
+  templateJson Json     @map("template_json") @db.JsonB
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  resumes Resume[]
+
+  @@map("templates")
+}
+
+model GeneratedPDF {
+  id        String   @id @default(uuid()) @db.Uuid
+  resumeId  String   @map("resume_id") @db.Uuid
+  version   Int
+  fileUrl   String   @map("file_url")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId])
+  @@map("generated_pdfs")
+}
+
+model ATSReport {
+  id             String   @id @default(uuid()) @db.Uuid
+  resumeId       String   @map("resume_id") @db.Uuid
+  score          Int
+  keywords       Json     @default("[]") @db.JsonB
+  missingKeywords Json    @default("[]") @map("missing_keywords") @db.JsonB
+  grammarScore   Int?     @map("grammar_score")
+  formatScore    Int?     @map("format_score")
+  readability    Int?
+  aiSuggestions  Json?    @map("ai_suggestions") @db.JsonB
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId])
+  @@map("ats_reports")
+}
+
+model AIProvider {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  model     String
+  enabled   Boolean  @default(true)
+  priority  Int      @default(0)
+  apiUrl    String?  @map("api_url")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("ai_providers")
+}
+
+model AILog {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String?  @map("user_id") @db.Uuid
+  resumeId       String?  @map("resume_id") @db.Uuid
+  provider       String
+  model          String?
+  feature        String
+  responseTime   Int?     @map("response_time")
+  estimatedTokens Int?    @map("estimated_tokens")
+  status         AIStatus @default(PENDING)
+  error          String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user   User?   @relation(fields: [userId], references: [id])
+  resume Resume? @relation(fields: [resumeId], references: [id])
+
+  @@index([userId])
+  @@index([provider])
+  @@map("ai_logs")
+}
+
+model UserSettings {
+  id               String  @id @default(uuid()) @db.Uuid
+  userId           String  @unique @map("user_id") @db.Uuid
+  theme            String  @default("system")
+  preferredAi      String? @map("preferred_ai")
+  language         String  @default("en")
+  autosave         Boolean @default(true)
+  emailNotifications Boolean @default(true) @map("email_notifications")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  action    String
+  entity    String?
+  entityId  String?  @map("entity_id")
+  metadata  Json?    @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+model ProjectBlueprint {
+  id          String   @id @default(uuid()) @db.Uuid
+  role        String
+  technology  String
+  difficulty  String
+  projectJson Json     @map("project_json") @db.JsonB
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([role, technology])
+  @@map("project_blueprints")
+}
