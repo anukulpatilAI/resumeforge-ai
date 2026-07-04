@@ -1,8 +1,4 @@
-
-
-
-
-Hello, i want to create a resume builder for all software fields, for person either they are fresher or experienced , as their are many platforms which make it but are paid or watermarked , i want people to make resume with my project easily, they just give basic information first, like name, email, number address , education , about them and what they looking for , if they are already working they give their project details, if they are jobless we provide them proper project i their resume and also guide them for this with proper handson, but for resume you can help me to create architechture, we can start with some main domains, and later we expand. we also can create resume acording to jd, and ats friendly . this is my idea please help me to do this 
+Hello, i want to create a resume builder for all software fields, for person either they are fresher or experienced , as their are many platforms which make it but are paid or watermarked , i want people to make resume with my project easily, they just give basic information first, like name, email, number address , education , about them and what they looking for , if they are already working they give their project details, if they are jobless we provide them proper project i their resume and also guide them for this with proper handson, but for resume you can help me to create architechture, we can start with some main domains, and later we expand. we also can create resume acording to jd, and ats friendly . this is my idea please help me to do this
 
 I think this is a very good idea, especially if you focus on helping people get jobs rather than just generating a PDF.
 
@@ -76,7 +72,7 @@ Download PDF
 This can be completed in 2-3 months.
 
 Overall Architecture
-                    React / NextJS
+React / NextJS
 
                            │
 
@@ -84,13 +80,13 @@ Overall Architecture
 
           │                              │
 
- Resume Builder                 AI Services
+Resume Builder AI Services
 
           │                              │
 
           │                              │
 
- PostgreSQL                    OpenAI API
+PostgreSQL OpenAI API
 
           │                              │
 
@@ -103,6 +99,7 @@ Overall Architecture
                            │
 
                     Download Resume
+
 Later
 
                     Job Matching
@@ -118,6 +115,7 @@ Later
                     Skill Roadmap
 
                     Project Generator
+
 Main Modules
 Module 1
 Personal Information
@@ -714,7 +712,6 @@ I also recommend designing this like a product from day one, with clean APIs and
 
 I can also help you design this as a production-grade SaaS application, including the complete database schema, API architecture, AI prompt architecture, folder structure, user flow, and development roadmap before writing any code. That upfront design will make the project much easier to build and scale.
 
-
 how much cost is required it befor going live , my target to make it free first
 
 Making it free for users initially is absolutely possible. In fact, I'd recommend not spending much money until people actually use it.
@@ -725,16 +722,16 @@ Cost Breakdown
 Phase 1 (Development)
 If you build it yourself:
 
-Item	Cost
-Development	₹0
-GitHub	₹0
-VS Code	₹0
-Next.js	₹0
-Node.js	₹0
-PostgreSQL	₹0
-Prisma	₹0
-Tailwind	₹0
-Total	₹0
+Item Cost
+Development ₹0
+GitHub ₹0
+VS Code ₹0
+Next.js ₹0
+Node.js ₹0
+PostgreSQL ₹0
+Prisma ₹0
+Tailwind ₹0
+Total ₹0
 AI Cost
 This is the only part that can become expensive.
 
@@ -765,12 +762,12 @@ Letting users edit manually without AI
 Hosting
 For an MVP, many services have generous free tiers.
 
-Service	Free Plan
-Frontend (e.g. Vercel)	Yes
-Backend (e.g. Railway/Render)	Yes (with limits)
-PostgreSQL (e.g. Supabase/Neon)	Yes
-GitHub	Yes
-Cloudflare	Yes
+Service Free Plan
+Frontend (e.g. Vercel) Yes
+Backend (e.g. Railway/Render) Yes (with limits)
+PostgreSQL (e.g. Supabase/Neon) Yes
+GitHub Yes
+Cloudflare Yes
 So your hosting cost can be ₹0/month while you're validating the product.
 
 Domain Name
@@ -814,13 +811,13 @@ You can start with free analytics tools.
 
 Total Estimated Monthly Cost
 0–500 users
-Item	Cost
-Hosting	₹0
-Database	₹0
-Storage	₹0
-Analytics	₹0
-Domain	~₹100/month (annual cost spread out)
-AI	Variable (depends on usage)
+Item Cost
+Hosting ₹0
+Database ₹0
+Storage ₹0
+Analytics ₹0
+Domain ~₹100/month (annual cost spread out)
+AI Variable (depends on usage)
 The AI API will likely be your primary operating expense.
 
 If You Reach 10,000 Users
@@ -885,10 +882,10 @@ Use predefined templates
 ↓
 
 Call AI only for:
-    • Professional Summary
-    • Experience rewriting
-    • Project generation
-    • JD matching
+• Professional Summary
+• Experience rewriting
+• Project generation
+• JD matching
 This approach can reduce AI costs significantly.
 
 I Would Build It in Three Phases
@@ -941,7 +938,6 @@ CareerForge AI
 ├── Portfolio Builder
 └── Career Roadmaps
 This creates much more long-term value than a standalone resume builder, because users stay on the platform throughout their job search instead of leaving after downloading a resume.
-
 
 first i create alone then merge them later
 
@@ -1128,13 +1124,13 @@ Keep the architecture future-proof
 Even if you're building alone, think like you're building a product that others might contribute to later.
 
 Frontend
-   ↓
+↓
 REST API
-   ↓
+↓
 Business Logic
-   ↓
+↓
 Database
-   ↓
+↓
 AI Service
 Avoid putting AI logic directly into your frontend. Keep it behind backend APIs so you can swap models or providers later.
 
@@ -1170,7 +1166,6 @@ Set up CI/CD.
 Track features and bugs with a simple Kanban board.
 
 That discipline will make the project much easier to maintain and expand when you're ready to merge it with your larger career platform.
-
 
 which ai api i can use for free for this , as we have very less user for this in starting only 10 20 user then i will purchase
 
@@ -1215,11 +1210,11 @@ Many models have free tiers or very low-cost access.
 Typical workflow:
 
 Resume Builder
-      ↓
+↓
 Your Backend
-      ↓
+↓
 OpenRouter API
-      ↓
+↓
 Free/Open Model
 Advantages:
 
@@ -1263,8 +1258,7 @@ Cloudflare offers AI models that can be inexpensive and integrate well if you la
 
 What I would use
 During Development
-Ollama
-+
+Ollama +
 Llama / Qwen / Gemma
 Cost:
 
@@ -1345,22 +1339,21 @@ If you only invoke AI for the parts that truly benefit from it, you'll keep cost
 
 Given your expected traffic of 10–20 users, you can comfortably build, test, and even launch an MVP using a combination of Ollama for development and Google Gemini's free tier for online users before you need to pay for AI services.
 
-
-thats great i will use free one like ollama, Google AI Studio, open router , i will give api of all once i test each i will provide a way to switch by myself. 
+thats great i will use free one like ollama, Google AI Studio, open router , i will give api of all once i test each i will provide a way to switch by myself.
 
 That's exactly how I would design it. In fact, I would go one step further and make AI providers completely pluggable, so you never have to change your business logic when switching providers.
 
 Architecture
-                 Resume Builder
-                       │
-               Resume Service
-                       │
-        ┌──────────────┼──────────────┐
-        │              │              │
-   AI Provider    PDF Service    ATS Service
-        │
- ┌──────┼──────────┬──────────┬──────────┐
- │      │          │          │          │
+Resume Builder
+│
+Resume Service
+│
+┌──────────────┼──────────────┐
+│ │ │
+AI Provider PDF Service ATS Service
+│
+┌──────┼──────────┬──────────┬──────────┐
+│ │ │ │ │
 Ollama Gemini OpenRouter OpenAI Claude
 Your resume generation code should never know which AI provider is being used.
 
@@ -1368,15 +1361,15 @@ Create a common interface
 For example:
 
 interface AIProvider {
-  generateSummary(data: ResumeData): Promise<string>;
+generateSummary(data: ResumeData): Promise<string>;
 
-  generateProject(data: ProjectData): Promise<string>;
+generateProject(data: ProjectData): Promise<string>;
 
-  improveExperience(data: ExperienceData): Promise<string>;
+improveExperience(data: ExperienceData): Promise<string>;
 
-  analyzeJD(jd: string, resume: ResumeData): Promise<ATSResult>;
+analyzeJD(jd: string, resume: ResumeData): Promise<ATSResult>;
 
-  generateCoverLetter(data: CoverLetterData): Promise<string>;
+generateCoverLetter(data: CoverLetterData): Promise<string>;
 }
 Then each provider implements this interface.
 
@@ -1522,7 +1515,7 @@ Uses a smaller model
 
 Generates in ~5 seconds
 
-------------------------
+---
 
 Balanced
 
@@ -1530,7 +1523,7 @@ Better writing
 
 ~10 seconds
 
-------------------------
+---
 
 Premium
 
@@ -1556,8 +1549,7 @@ If we plan this well, the resume builder can become the foundation for a larger 
 
 My suggestion is that before writing any code, we spend some time designing the product properly—database schema, folder structure, APIs, prompts, AI abstraction, authentication, resume templates, ATS engine, and deployment strategy. A solid architecture now will save you a lot of refactoring as the project grows.
 
-
-so can you please provide me a prompt for this 
+so can you please provide me a prompt for this
 
 go to next step
 
@@ -1570,7 +1562,7 @@ ResumeForge AI
 Version: 1.0
 
 1. Architecture Philosophy
-ResumeForge AI will follow:
+   ResumeForge AI will follow:
 
 Modular Monolith (MVP)
 
@@ -1608,27 +1600,27 @@ Easier testing
 If you later reach thousands of users, you can split modules into separate services.
 
 2. Overall Architecture
-                     Browser
-                         │
-                Next.js Frontend
-                         │
-                REST API (NestJS)
-                         │
-        ┌──────────────────────────────────────┐
-        │              Core API                │
-        └──────────────────────────────────────┘
-             │        │        │         │
-             │        │        │         │
-      Resume Module  AI     ATS     PDF Generator
-             │        │        │         │
-             └────────┴────────┴─────────┘
-                         │
-                    PostgreSQL
-Future modules plug into the Core API without changing existing code.
+   Browser
+   │
+   Next.js Frontend
+   │
+   REST API (NestJS)
+   │
+   ┌──────────────────────────────────────┐
+   │ Core API │
+   └──────────────────────────────────────┘
+   │ │ │ │
+   │ │ │ │
+   Resume Module AI ATS PDF Generator
+   │ │ │ │
+   └────────┴────────┴─────────┘
+   │
+   PostgreSQL
+   Future modules plug into the Core API without changing existing code.
 
 3. System Modules
-Authentication
-Responsibilities:
+   Authentication
+   Responsibilities:
 
 Login
 
@@ -1761,7 +1753,7 @@ Analytics
 Prompt versions
 
 4. Frontend Architecture
-Next.js
+   Next.js
 
 │
 
@@ -1783,8 +1775,7 @@ Next.js
 
 ├── Settings
 
-└── Admin
-5. Backend Architecture
+└── Admin 5. Backend Architecture
 NestJS
 
 │
@@ -1809,7 +1800,7 @@ NestJS
 Use dependency injection throughout.
 
 6. AI Architecture
-This is one of the most important parts.
+   This is one of the most important parts.
 
 Resume Module
 
@@ -1853,7 +1844,7 @@ analyzeJD()
 It doesn't know or care which provider is active.
 
 7. Provider Selection
-Configuration:
+   Configuration:
 
 AI_PROVIDER=ollama
 Possible values:
@@ -1873,7 +1864,7 @@ Future:
 Allow users to choose their own provider in settings (for advanced users).
 
 8. Database Overview
-Main entities:
+   Main entities:
 
 User
 
@@ -1919,8 +1910,8 @@ ATS Results
 We'll design these in detail in the next document.
 
 9. File Storage
-MVP
-Store locally.
+   MVP
+   Store locally.
 
 Production
 Support S3-compatible storage.
@@ -1934,7 +1925,7 @@ Profile images
 Uploaded JDs
 
 10. Resume Generation Flow
-Create Resume
+    Create Resume
 
 ↓
 
@@ -1966,8 +1957,7 @@ Generate PDF
 
 ↓
 
-Download
-11. JD Matching Flow
+Download 11. JD Matching Flow
 Upload JD
 
 ↓
@@ -1992,8 +1982,7 @@ Suggestions
 
 ↓
 
-Apply Improvements
-12. Project Academy Flow
+Apply Improvements 12. Project Academy Flow
 Choose Career
 
 ↓
@@ -2022,8 +2011,7 @@ Resume Description
 
 ↓
 
-Interview Questions
-13. AI Prompt Library
+Interview Questions 13. AI Prompt Library
 Never hardcode prompts.
 
 Instead:
@@ -2046,18 +2034,18 @@ interview.md
 Version prompts so improvements don't break older behavior.
 
 14. Error Handling
-Standard response format:
+    Standard response format:
 
 {
-  "success": false,
-  "code": "AI_TIMEOUT",
-  "message": "AI provider did not respond.",
-  "traceId": "abc123"
+"success": false,
+"code": "AI_TIMEOUT",
+"message": "AI provider did not respond.",
+"traceId": "abc123"
 }
 Include trace IDs for debugging.
 
 15. Logging
-Log:
+    Log:
 
 AI provider
 
@@ -2074,7 +2062,7 @@ User actions (non-sensitive)
 Avoid logging personal resume content unless necessary for debugging and only with appropriate privacy safeguards.
 
 16. Security
-Password hashing
+    Password hashing
 
 JWT/session auth
 
@@ -2089,7 +2077,7 @@ Secure headers
 Audit logging
 
 17. Testing Strategy
-Unit Tests:
+    Unit Tests:
 
 Services
 
@@ -2116,7 +2104,7 @@ Authentication
 Given your QA background, this can become a showcase of high-quality engineering.
 
 18. Deployment
-Development:
+    Development:
 
 Frontend → localhost:3000
 
@@ -2143,8 +2131,7 @@ AI Providers
 
 ↓
 
-Cloud Storage
-19. Roadmap
+Cloud Storage 19. Roadmap
 Phase 1
 Authentication
 
@@ -2210,7 +2197,6 @@ The next document is the Database Design (LLD + ERD + Prisma Schema).
 
 This will define every table, relationship, indexing strategy, soft deletes, audit fields, resume versioning, and how all modules connect. A well-designed database now will make future features much easier to implement.
 
-
 please go ahead
 
 Excellent. Now we are entering the heart of the application. The database design is the one thing that's hardest to change later, so we should make it future-proof from the beginning.
@@ -2232,22 +2218,22 @@ Database Philosophy
 We'll use three types of data:
 
 Relational Data
-    ↓
+↓
 Users
 Templates
 AI Providers
 Settings
 
-----------------------------
+---
 
 Document Data (JSON)
-    ↓
+↓
 Resume Content
 
-----------------------------
+---
 
 Analytics Data
-    ↓
+↓
 AI Logs
 ATS Reports
 Downloads
@@ -2256,12 +2242,12 @@ Main Tables
 User
 │
 ├── Resume
-│      │
-│      ├── ResumeVersion
-│      │
-│      ├── ATSReport
-│      │
-│      ├── GeneratedPDF
+│ │
+│ ├── ResumeVersion
+│ │
+│ ├── ATSReport
+│ │
+│ ├── GeneratedPDF
 │
 ├── UserSettings
 │
@@ -2272,8 +2258,9 @@ User
 ├── InterviewProgress (future)
 │
 └── ActivityLog
+
 1. Users
-users
+   users
 
 id
 
@@ -2293,8 +2280,7 @@ created_at
 
 updated_at
 
-deleted_at
-2. Resume
+deleted_at 2. Resume
 One user can have many resumes.
 
 resume
@@ -2340,8 +2326,7 @@ Java Resume
 
 ↓
 
-DevOps Resume
-3. Resume Version ⭐
+DevOps Resume 3. Resume Version ⭐
 This is one feature almost no free resume builder provides.
 
 Every time the user clicks Save:
@@ -2380,24 +2365,24 @@ Everything goes inside resume_json.
 
 Example Resume JSON
 {
-  "personal": {
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "summary": "...",
-  "education": [],
-  "skills": [],
-  "experience": [],
-  "projects": [],
-  "certifications": [],
-  "languages": [],
-  "awards": [],
-  "references": []
+"personal": {
+"name": "John Doe",
+"email": "john@example.com"
+},
+"summary": "...",
+"education": [],
+"skills": [],
+"experience": [],
+"projects": [],
+"certifications": [],
+"languages": [],
+"awards": [],
+"references": []
 }
 Adding future sections like Publications, Patents, Open Source Contributions, or Speaking Engagements becomes trivial—no database migration required.
 
 4. Templates
-template
+   template
 
 id
 
@@ -2415,7 +2400,7 @@ created_at
 The template stores layout metadata rather than HTML.
 
 5. Generated PDFs
-generated_pdf
+   generated_pdf
 
 id
 
@@ -2425,8 +2410,7 @@ version
 
 file_url
 
-created_at
-6. ATS Reports
+created_at 6. ATS Reports
 ats_report
 
 id
@@ -2451,7 +2435,7 @@ created_at
 The suggestions can also be JSON.
 
 7. AI Provider
-ai_provider
+   ai_provider
 
 id
 
@@ -2468,11 +2452,10 @@ api_url
 created_at
 Example:
 
-Name	Enabled
-Ollama	✅
-Gemini	✅
-OpenRouter	✅
-8. AI Logs
+Name Enabled
+Ollama ✅
+Gemini ✅
+OpenRouter ✅ 8. AI Logs
 ai_log
 
 id
@@ -2499,7 +2482,7 @@ created_at
 Do not store the full prompt or resume content by default to protect user privacy. If you add debug logging later, make it opt-in and redact sensitive data.
 
 9. User Settings
-user_settings
+   user_settings
 
 id
 
@@ -2515,8 +2498,7 @@ autosave
 
 email_notifications
 
-created_at
-10. Activity Log
+created_at 10. Activity Log
 activity_log
 
 id
@@ -2543,7 +2525,7 @@ Generated Summary
 Switched Template
 
 11. Project Academy
-project_blueprint
+    project_blueprint
 
 id
 
@@ -2580,7 +2562,7 @@ Learning Resources
 This allows you to create reusable blueprints.
 
 12. Resume Templates
-Don't store templates as HTML.
+    Don't store templates as HTML.
 
 Instead:
 
@@ -2614,13 +2596,13 @@ User
 
 ├── Resume
 
-│      │
+│ │
 
-│      ├── ResumeVersion
+│ ├── ResumeVersion
 
-│      ├── ATSReport
+│ ├── ATSReport
 
-│      ├── GeneratedPDF
+│ ├── GeneratedPDF
 
 │
 
@@ -2743,15 +2725,15 @@ Career Dashboard
 The schema supports all of these without redesigning the core.
 
 Estimated Tables
-Module	Tables
-User	3
-Resume	4
-AI	2
-ATS	1
-Templates	1
-Activity	1
-Settings	1
-Project Academy	1
+Module Tables
+User 3
+Resume 4
+AI 2
+ATS 1
+Templates 1
+Activity 1
+Settings 1
+Project Academy 1
 Total MVP: approximately 14–16 tables, which is a manageable size for a solo developer while leaving room for future expansion.
 
 One important improvement I'd make
@@ -2760,19 +2742,18 @@ Instead of treating the resume as a fixed document, I'd treat it as a Career Pro
 The resume becomes just one view of that profile.
 
 Career Profile
-        │
-        ├── Resume (ATS)
-        ├── Resume (Modern)
-        ├── Resume (One Page)
-        ├── LinkedIn Profile
-        ├── Portfolio Website
-        ├── Cover Letter
-        ├── Interview Notes
-        └── Skills Dashboard
+│
+├── Resume (ATS)
+├── Resume (Modern)
+├── Resume (One Page)
+├── LinkedIn Profile
+├── Portfolio Website
+├── Cover Letter
+├── Interview Notes
+└── Skills Dashboard
 This is a powerful architectural decision because users maintain one source of truth. Every output—resume, LinkedIn, portfolio, cover letter—is generated from the same underlying profile.
 
 I strongly recommend building with this concept from day one. It will make future modules much easier to add and will distinguish ResumeForge AI from traditional resume builders.
-
 
 move to next steps please
 
@@ -3102,18 +3083,18 @@ Every endpoint returns the same structure.
 Success:
 
 {
-  "success": true,
-  "message": "Resume created successfully.",
-  "data": {}
+"success": true,
+"message": "Resume created successfully.",
+"data": {}
 }
 Error:
 
 {
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Target role is required."
-  }
+"success": false,
+"error": {
+"code": "VALIDATION_ERROR",
+"message": "Target role is required."
+}
 }
 This consistency simplifies frontend development.
 
@@ -3315,23 +3296,23 @@ Huge Form
 We'll guide users through a career-building journey:
 
 Welcome
-        ↓
+↓
 Choose Target Career
-        ↓
+↓
 Experience Level
-        ↓
+↓
 Career Profile
-        ↓
+↓
 Skills Assessment
-        ↓
+↓
 Project Academy (if needed)
-        ↓
+↓
 AI Suggestions
-        ↓
+↓
 Resume Preview
-        ↓
+↓
 ATS Analysis
-        ↓
+↓
 Download Resume
 This makes the product feel like an AI career coach rather than just a form.
 
@@ -3363,7 +3344,6 @@ Interview Preparation Kit
 The resume becomes one output, not the core data model.
 
 I believe this is the right long-term architecture because it avoids duplicated data, makes future features much easier to build, and aligns perfectly with your long-term vision of helping software professionals throughout their job search.
-
 
 yes i accept your suggestion , move to next steps please
 
@@ -3689,9 +3669,8 @@ If a proposed feature fails any of these questions, we move it to a later versio
 
 I think these principles will keep ResumeForge AI focused, reduce development time, and help you launch much sooner.
 
-
 please create this AI Architecture & Prompt Engineering Design
-ResumeForge AI again and updated one 
+ResumeForge AI again and updated one
 
 Absolutely. Since we have refined the product vision, the AI Architecture should also change. The biggest change is that AI is only responsible for helping users create better resumes. It is not a teacher, course platform, or career mentor in the MVP.
 
@@ -3703,14 +3682,14 @@ Version: 1.0
 Status: Final (MVP)
 
 1. Purpose
-The AI system in ResumeForge AI exists to assist users in creating high-quality, ATS-friendly resumes.
+   The AI system in ResumeForge AI exists to assist users in creating high-quality, ATS-friendly resumes.
 
 The AI should improve content quality, help users express their experience professionally, and tailor resumes for software industry roles.
 
 The AI is not responsible for business logic, validation, resume structure, authentication, or application workflows.
 
 2. AI Design Principles
-Every AI feature must follow these principles:
+   Every AI feature must follow these principles:
 
 Simple
 The AI should provide one clear task at a time.
@@ -3778,7 +3757,7 @@ Template rendering
 without AI.
 
 3. AI Responsibilities
-The AI module is responsible for:
+   The AI module is responsible for:
 
 Resume Summary
 Generate a professional summary.
@@ -3826,7 +3805,7 @@ LinkedIn Summary (Future)
 Generate LinkedIn About section.
 
 4. AI Responsibilities Excluded From MVP
-The AI will NOT:
+   The AI will NOT:
 
 Teach technologies
 
@@ -3845,7 +3824,7 @@ Replace application business logic
 These features may be added in future versions.
 
 5. Overall AI Architecture
-Frontend
+   Frontend
 
 ↓
 
@@ -3881,7 +3860,7 @@ The Resume module communicates only with the AI Service.
 It never communicates directly with providers.
 
 6. AI Provider Interface
-Every provider must implement the same interface.
+   Every provider must implement the same interface.
 
 Example methods:
 
@@ -3910,7 +3889,7 @@ generateLinkedInSummary()
 This guarantees provider independence.
 
 7. AI Provider Factory
-The Provider Factory selects the active AI provider.
+   The Provider Factory selects the active AI provider.
 
 Configuration example:
 
@@ -3930,7 +3909,7 @@ claude
 Changing the provider must not require application code changes.
 
 8. Prompt Management
-Prompts must never be written directly inside TypeScript code.
+   Prompts must never be written directly inside TypeScript code.
 
 Store prompts separately.
 
@@ -3961,8 +3940,7 @@ summary/
 
 v1.md
 
-v2.md
-9. Prompt Structure
+v2.md 9. Prompt Structure
 Every prompt follows the same structure.
 
 Role
@@ -4005,11 +3983,10 @@ Prefer structured JSON whenever possible.
 Example:
 
 {
-  "summary": "",
-  "keywords": [],
-  "suggestions": []
-}
-10. Prompt Variables
+"summary": "",
+"keywords": [],
+"suggestions": []
+} 10. Prompt Variables
 Use placeholders.
 
 Example:
@@ -4028,8 +4005,8 @@ Projects:
 Avoid string concatenation.
 
 11. Prompt Categories
-Resume
-Generate Summary
+    Resume
+    Generate Summary
 
 Improve Summary
 
@@ -4064,8 +4041,7 @@ Compare Resume
 Suggest Improvements
 
 Cover Letter (Future)
-LinkedIn (Future)
-12. AI Context Management
+LinkedIn (Future) 12. AI Context Management
 Do not send the complete resume every time.
 
 Only send the minimum required information.
@@ -4091,23 +4067,23 @@ Awards
 Reducing context reduces cost and improves response time.
 
 13. Structured Responses
-Prefer structured JSON instead of free-form text.
+    Prefer structured JSON instead of free-form text.
 
 Example:
 
 {
-  "summary": "...",
-  "keywords": [
-    "Playwright",
-    "API Testing"
-  ],
-  "warnings": [],
-  "suggestions": []
+"summary": "...",
+"keywords": [
+"Playwright",
+"API Testing"
+],
+"warnings": [],
+"suggestions": []
 }
 Structured responses are easier to validate and render.
 
 14. AI Response Validation
-Never trust AI responses directly.
+    Never trust AI responses directly.
 
 Validate:
 
@@ -4124,7 +4100,7 @@ Minimum length
 Only validated responses are returned to the frontend.
 
 15. Retry Strategy
-If a provider fails:
+    If a provider fails:
 
 Retry
 
@@ -4142,7 +4118,7 @@ Return Error
 The user should receive meaningful feedback.
 
 16. Provider Fallback
-Example order:
+    Example order:
 
 Gemini
 
@@ -4160,7 +4136,7 @@ Failure
 The order should be configurable.
 
 17. AI Logging
-Log only operational information.
+    Log only operational information.
 
 Store:
 
@@ -4181,7 +4157,7 @@ Estimated Tokens (if available)
 Do not store user resume content by default.
 
 18. Cost Optimization
-To minimize AI costs:
+    To minimize AI costs:
 
 Call AI only when requested by the user.
 
@@ -4194,8 +4170,8 @@ Prefer local models during development.
 Avoid AI for deterministic operations.
 
 19. Recommended AI Providers
-Development
-Primary:
+    Development
+    Primary:
 
 Ollama
 
@@ -4224,7 +4200,7 @@ DeepSeek
 Mistral
 
 20. Project Library Support
-The Project Library is not an AI learning system.
+    The Project Library is not an AI learning system.
 
 Its purpose is to help users include well-structured, portfolio-ready projects in their resumes.
 
@@ -4241,7 +4217,7 @@ Tailoring project descriptions for ATS.
 The actual project source code, documentation, tutorials, and GitHub repositories will be maintained separately and may be linked from the Project Library in future versions.
 
 21. Future AI Features
-Planned for future releases:
+    Planned for future releases:
 
 AI Career Coach
 
@@ -4260,7 +4236,7 @@ Project Documentation Generator
 These are outside the MVP scope.
 
 22. Success Criteria
-The AI module is considered successful if it helps users:
+    The AI module is considered successful if it helps users:
 
 Create professional summaries.
 
@@ -4292,13 +4268,12 @@ Capability
 Each capability is then mapped to the selected provider.
 
 Resume Summary
-        │
-        ├── Ollama
-        ├── Gemini
-        ├── OpenRouter
-        └── OpenAI
+│
+├── Ollama
+├── Gemini
+├── OpenRouter
+└── OpenAI
 This means that if, in the future, one provider produces better ATS analysis while another writes better summaries, you can route different capabilities to different providers without changing the rest of your application. It's a small architectural decision now that gives you enormous flexibility later. I strongly recommend adopting it from the beginning.
-
 
 i dont know capabilities of this, i use 2 3 models just because its free, i will adopt it later when i have crowd and i know which do which job better
 
@@ -4310,19 +4285,19 @@ What I recommend instead
 Keep the AI layer very simple.
 
 Frontend
-    │
-    ▼
+│
+▼
 Backend (NestJS)
-    │
-    ▼
+│
+▼
 AI Service
-    │
-    ▼
+│
+▼
 Current Provider
-    │
-    ├── Ollama
-    ├── Gemini
-    └── OpenRouter
+│
+├── Ollama
+├── Gemini
+└── OpenRouter
 The only responsibility of the AI Service is:
 
 Read the selected provider from configuration.
@@ -4388,13 +4363,14 @@ ai/
     ai.interface.ts
 
     ai.module.ts
+
 Very simple.
 
 Provider Interface
 Each provider implements exactly one interface.
 
 interface AIProvider {
-    generate(prompt: string): Promise<string>;
+generate(prompt: string): Promise<string>;
 }
 That's enough for Version 1.
 
@@ -4485,7 +4461,6 @@ Notice what I removed:
 
 Those are excellent ideas, but they are separate products. By keeping ResumeForge AI laser-focused on helping users create and optimize resumes, you'll launch faster, maintain the project more easily, and solve one problem exceptionally well before expanding. I think that's the strongest strategy for a solo founder.
 
-
 yes its corrrect so can i change the AI Architecture & Prompt Engineering
 
 Yes. In fact, I recommend changing it now, before writing any code.
@@ -4499,7 +4474,7 @@ So let's follow this principle:
 Make the architecture as simple as possible, but not simpler.
 
 I would simplify the AI Architecture to this
-                    ResumeForge AI
+ResumeForge AI
 
                          │
 
@@ -4518,6 +4493,7 @@ I would simplify the AI Architecture to this
          ┌──────────┬────────────┬────────────┐
          │          │            │
       Ollama     Gemini     OpenRouter
+
 That's enough.
 
 Remove These Sections
@@ -4551,10 +4527,10 @@ Keep These Sections
 These are enough for V1:
 
 1. AI Purpose
-Explain what AI is used for.
+   Explain what AI is used for.
 
 2. AI Design Principles
-Honest
+   Honest
 
 ATS Friendly
 
@@ -4565,7 +4541,7 @@ Simple
 Fast
 
 3. AI Features
-Summary
+   Summary
 
 Experience
 
@@ -4576,16 +4552,16 @@ ATS Suggestions
 JD Match
 
 4. AI Architecture
-Simple diagram.
+   Simple diagram.
 
 5. Provider Interface
-One interface.
+   One interface.
 
 generate(prompt)
 That's enough.
 
 6. AI Factory
-Reads
+   Reads
 
 AI_PROVIDER=ollama
 Returns provider.
@@ -4593,7 +4569,7 @@ Returns provider.
 Done.
 
 7. Prompt Management
-prompts/
+   prompts/
 
 summary.md
 
@@ -4603,8 +4579,7 @@ projects.md
 
 ats.md
 
-jd.md
-8. Prompt Structure
+jd.md 8. Prompt Structure
 System
 
 ↓
@@ -4616,10 +4591,10 @@ User
 JSON Output
 
 9. Validation
-Validate AI response before returning it.
+   Validate AI response before returning it.
 
 10. Logging
-Only log
+    Only log
 
 Provider
 
@@ -4630,7 +4605,7 @@ Success
 Nothing else.
 
 11. Future Scope
-Just mention
+    Just mention
 
 In future versions ResumeForge AI may support:
 
@@ -4680,6 +4655,7 @@ ai/
         ats.md
 
         jd.md
+
 That's it.
 
 Nothing more.
@@ -4700,6 +4676,7 @@ assistant/
     prompts/
 
     providers/
+
 Why?
 
 Because later this module won't only call AI.
@@ -4738,7 +4715,6 @@ We'll follow these principles:
 📦 Add complexity only when it solves a real problem
 
 I believe this approach will help you launch within 2–3 months as a solo developer while still creating a professional, extensible codebase. Once you have users and feedback, we'll evolve the architecture based on real needs instead of assumptions. I think that's the strongest path for ResumeForge AI.
-
 
 go to LLD and next steps please be fst
 
@@ -4793,14 +4769,14 @@ Folder Structure
 ResumeForgeAI/
 
 apps/
-    web/
-    api/
+web/
+api/
 
 packages/
-    ui/
-    shared/
-    prompts/
-    types/
+ui/
+shared/
+prompts/
+types/
 
 docs/
 
@@ -5111,23 +5087,23 @@ Response
 
 Validation
 Project Timeline
-Week	Goal
-1	Project Setup
-2	Authentication
-3	Career Profile
-4	Resume Builder
-5	Templates
-6	PDF
-7	AI
-8	ATS
-9	JD Match
-10	Testing & Deployment
+Week Goal
+1 Project Setup
+2 Authentication
+3 Career Profile
+4 Resume Builder
+5 Templates
+6 PDF
+7 AI
+8 ATS
+9 JD Match
+10 Testing & Deployment
 Estimated Lines of Code
-Module	Approx. LOC
-Frontend	18,000–22,000
-Backend	12,000–15,000
-Shared	2,000
-Total	~35,000 LOC
+Module Approx. LOC
+Frontend 18,000–22,000
+Backend 12,000–15,000
+Shared 2,000
+Total ~35,000 LOC
 ⭐ Important Change I Recommend
 After seeing the complete design, I would make one major improvement before writing any code.
 
@@ -5135,16 +5111,16 @@ Instead of a standard monorepo, use TurboRepo.
 ResumeForgeAI/
 
 apps/
-    web/
-    api/
+web/
+api/
 
 packages/
-    ui/
-    shared/
-    prompts/
-    config/
-    eslint-config/
-    tsconfig/
+ui/
+shared/
+prompts/
+config/
+eslint-config/
+tsconfig/
 Why?
 
 Shared TypeScript configuration
@@ -5221,7 +5197,6 @@ A recruiter looking at this repository should be able to say:
 
 That will strengthen both your product and your own professional profile.
 
-
 Document 1 — Prisma Schema
 Complete database schema
 Relations
@@ -5262,15 +5237,15 @@ Short answer: No. Those are only the implementation documents. We still have sev
 Here's the complete roadmap I recommend.
 
 ✅ Phase 1 - Product Design (Completed)
-Document	Status
-SRS	✅
-Vision & Scope	✅
-HLD	✅
-Database Design	✅
-API Design	✅
-UI/UX Design	✅
-AI Architecture	✅
-LLD	✅
+Document Status
+SRS ✅
+Vision & Scope ✅
+HLD ✅
+Database Design ✅
+API Design ✅
+UI/UX Design ✅
+AI Architecture ✅
+LLD ✅
 🚧 Phase 2 - Implementation Design (Next)
 These are the documents you listed.
 
@@ -5607,12 +5582,12 @@ Project Library
 
 Job Tracker
 📊 Total Documentation
-Phase	Documents
-Product	8
-Implementation	6
-Engineering	9
-Business	3
-Future	5
+Phase Documents
+Product 8
+Implementation 6
+Engineering 9
+Business 3
+Future 5
 Total ≈ 31 Documents
 
 ⭐ What I Would Do (Instead of Writing 31 Separate Documents)
@@ -5652,7 +5627,7 @@ Volume 1
 14. Contributing
 
 15. Roadmap
-This becomes the single source of truth for the project.
+    This becomes the single source of truth for the project.
 
 💡 My Biggest Recommendation
 Since this project is going to be your flagship SaaS application, I wouldn't continue in chat for all of these documents.
@@ -5715,12 +5690,12 @@ docs/
     Integration.md
 
     Playwright.md
+
 That gives you professional documentation that lives with the code, is easy to version in Git, and can be maintained as the project evolves.
 
 I strongly recommend this approach over keeping everything in chat. It will make ResumeForge AI feel like an open-source project maintained by a professional engineering team, and it will be much easier to reference while you build.
 
-
-can you create all this please in one go 
+can you create all this please in one go
 
 Yes, I can—but not in a single ChatGPT response.
 
@@ -5736,76 +5711,76 @@ ResumeForgeAI/
 ├── docs/
 │
 ├── 01-product/
-│   ├── Vision.md
-│   ├── SRS.md
-│   ├── Roadmap.md
-│   ├── Features.md
-│   ├── UserFlow.md
-│   └── ReleasePlan.md
+│ ├── Vision.md
+│ ├── SRS.md
+│ ├── Roadmap.md
+│ ├── Features.md
+│ ├── UserFlow.md
+│ └── ReleasePlan.md
 │
 ├── 02-architecture/
-│   ├── HLD.md
-│   ├── LLD.md
-│   ├── Database.md
-│   ├── ERD.md
-│   ├── API.md
-│   ├── AI.md
-│   ├── ResumeEngine.md
-│   ├── PDFEngine.md
-│   └── Security.md
+│ ├── HLD.md
+│ ├── LLD.md
+│ ├── Database.md
+│ ├── ERD.md
+│ ├── API.md
+│ ├── AI.md
+│ ├── ResumeEngine.md
+│ ├── PDFEngine.md
+│ └── Security.md
 │
 ├── 03-backend/
-│   ├── NestJS.md
-│   ├── Prisma.md
-│   ├── Authentication.md
-│   ├── Authorization.md
-│   ├── Modules.md
-│   ├── DTO.md
-│   ├── Validation.md
-│   ├── Swagger.md
-│   ├── ErrorHandling.md
-│   └── Testing.md
+│ ├── NestJS.md
+│ ├── Prisma.md
+│ ├── Authentication.md
+│ ├── Authorization.md
+│ ├── Modules.md
+│ ├── DTO.md
+│ ├── Validation.md
+│ ├── Swagger.md
+│ ├── ErrorHandling.md
+│ └── Testing.md
 │
 ├── 04-frontend/
-│   ├── NextJS.md
-│   ├── Layout.md
-│   ├── Components.md
-│   ├── Zustand.md
-│   ├── TanStackQuery.md
-│   ├── Forms.md
-│   ├── ResumeBuilder.md
-│   ├── Dashboard.md
-│   └── Theme.md
+│ ├── NextJS.md
+│ ├── Layout.md
+│ ├── Components.md
+│ ├── Zustand.md
+│ ├── TanStackQuery.md
+│ ├── Forms.md
+│ ├── ResumeBuilder.md
+│ ├── Dashboard.md
+│ └── Theme.md
 │
 ├── 05-assistant/
-│   ├── Providers.md
-│   ├── Prompts.md
-│   ├── Summary.md
-│   ├── Experience.md
-│   ├── Projects.md
-│   ├── ATS.md
-│   └── JDMatching.md
+│ ├── Providers.md
+│ ├── Prompts.md
+│ ├── Summary.md
+│ ├── Experience.md
+│ ├── Projects.md
+│ ├── ATS.md
+│ └── JDMatching.md
 │
 ├── 06-devops/
-│   ├── Docker.md
-│   ├── GitHubActions.md
-│   ├── Deployment.md
-│   ├── Monitoring.md
-│   ├── Logging.md
-│   └── Environment.md
+│ ├── Docker.md
+│ ├── GitHubActions.md
+│ ├── Deployment.md
+│ ├── Monitoring.md
+│ ├── Logging.md
+│ └── Environment.md
 │
 ├── 07-testing/
-│   ├── Unit.md
-│   ├── Integration.md
-│   ├── Playwright.md
-│   ├── Performance.md
-│   └── SecurityTesting.md
+│ ├── Unit.md
+│ ├── Integration.md
+│ ├── Playwright.md
+│ ├── Performance.md
+│ └── SecurityTesting.md
 │
 └── 08-contributing/
-    ├── CodingStandards.md
-    ├── GitWorkflow.md
-    ├── BranchStrategy.md
-    └── ContributionGuide.md
+├── CodingStandards.md
+├── GitWorkflow.md
+├── BranchStrategy.md
+└── ContributionGuide.md
 I also want to improve your project
 I don't want to stop at documentation.
 

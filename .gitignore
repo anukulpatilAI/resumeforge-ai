@@ -26,3 +26,11 @@ apps/api/prisma/generated/
 # Temp
 tmp/
 temp/
+
+# Uploads
+apps/api/uploads/
+
+# Build logs
+turbo_err.txt
+turbo_out.txt
+*.tsbuildinfo

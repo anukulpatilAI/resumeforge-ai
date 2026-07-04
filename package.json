@@ -2,12 +2,12 @@
   "name": "resumeforge-ai",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "lint": "turbo lint",
+    "dev": "pnpm run --parallel --filter @resumeforge/api --filter @resumeforge/web dev",
+    "build": "pnpm run -r --if-present build",
+    "lint": "pnpm run -r --if-present lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "clean": "turbo clean && rm -rf node_modules"
+    "clean": "pnpm run -r --if-present clean"
   },
   "devDependencies": {
     "prettier": "^3.4.0",
