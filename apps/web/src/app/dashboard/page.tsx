@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
 import { FileText, Target, Sparkles, TrendingUp } from 'lucide-react';
 
@@ -12,6 +13,8 @@ const stats = [
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
+
+  const router = useRouter();
 
   return (
     <div className="space-y-8">
@@ -40,14 +43,13 @@ export default function DashboardPage() {
       <div className="rounded-xl border border-[var(--border)] p-8 text-center">
         <h2 className="text-xl font-semibold mb-2">Ready to build your resume?</h2>
         <p className="text-[var(--muted-foreground)] mb-6">Create your first resume in minutes with AI assistance</p>
-        <a
-          href="/dashboard/resumes"
-          onClick={(e) => { e.preventDefault(); }}
+        <button
+          onClick={() => router.push('/dashboard/resumes')}
           className="inline-flex items-center gap-2 rounded-lg bg-[var(--primary)] px-6 py-3 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90"
         >
           <FileText className="h-5 w-5" />
           Create Resume
-        </a>
+        </button>
       </div>
     </div>
   );
