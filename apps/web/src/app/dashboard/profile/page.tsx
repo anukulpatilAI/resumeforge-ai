@@ -108,13 +108,22 @@ export default function ProfilePage() {
         >
           Previous
         </button>
-        <button
-          onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
-          disabled={step === steps.length - 1}
-          className="rounded-lg bg-[var(--primary)] px-6 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90 disabled:opacity-50"
-        >
-          Next
-        </button>
+        {step === steps.length - 1 ? (
+          <button
+            onClick={() => saveProfile()}
+            disabled={isSaving}
+            className="rounded-lg bg-green-600 px-6 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+          >
+            {isSaving ? 'Saving...' : 'Save Profile'}
+          </button>
+        ) : (
+          <button
+            onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
+            className="rounded-lg bg-[var(--primary)] px-6 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90"
+          >
+            Next
+          </button>
+        )}
       </div>
     </div>
   );
