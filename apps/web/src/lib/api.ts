@@ -74,8 +74,8 @@ class ApiClient {
       }
 
       const data = await res.json();
-      this.setTokens(data.tokens);
-      return data.tokens;
+      this.setTokens(data);
+      return data;
     } catch {
       this.clearTokens();
       return null;

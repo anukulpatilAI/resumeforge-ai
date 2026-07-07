@@ -49,6 +49,7 @@ export interface ResumeSection {
   visible: boolean;
   data?: PersonalInfo;
   text?: string;
+  format?: 'paragraph' | 'bulletPoints';
   items?: (Education | Skill | Experience | Project | Certification | Language)[];
 }
 

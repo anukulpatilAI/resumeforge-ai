@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
 import { UpdateCareerProfileDto } from './dto/career-profile.dto';
 import { CareerProfileData } from './interfaces/career-profile.interface';
@@ -39,7 +40,7 @@ export class CareerProfileService {
 
       const updated = await this.prisma.careerProfile.update({
         where: { userId },
-        data: { profileJson: merged as any },
+        data: { profileJson: merged as unknown as Prisma.InputJsonValue },
       });
 
       return { userId, profile: updated.profileJson as unknown as CareerProfileData };
@@ -49,7 +50,7 @@ export class CareerProfileService {
     const merged = this.mergeProfile(defaults, dto);
 
     const created = await this.prisma.careerProfile.create({
-      data: { userId, profileJson: merged as any },
+      data: { userId, profileJson: merged as unknown as Prisma.InputJsonValue },
     });
 
     return { userId, profile: created.profileJson as unknown as CareerProfileData };
@@ -58,13 +59,13 @@ export class CareerProfileService {
   private mergeProfile(existing: CareerProfileData, dto: UpdateCareerProfileDto): CareerProfileData {
     return {
       personalInfo: { ...existing.personalInfo, ...dto.personalInfo },
-      education: (dto.education ?? existing.education) as any,
-      skills: (dto.skills ?? existing.skills) as any,
-      experience: (dto.experience ?? existing.experience) as any,
-      projects: (dto.projects ?? existing.projects) as any,
-      certifications: (dto.certifications ?? existing.certifications) as any,
-      languages: (dto.languages ?? existing.languages) as any,
-      achievements: (dto.achievements ?? existing.achievements) as any,
+      education: (dto.education ?? existing.education) as CareerProfileData['education'],
+      skills: (dto.skills ?? existing.skills) as CareerProfileData['skills'],
+      experience: (dto.experience ?? existing.experience) as CareerProfileData['experience'],
+      projects: (dto.projects ?? existing.projects) as CareerProfileData['projects'],
+      certifications: (dto.certifications ?? existing.certifications) as CareerProfileData['certifications'],
+      languages: (dto.languages ?? existing.languages) as CareerProfileData['languages'],
+      achievements: (dto.achievements ?? existing.achievements) as CareerProfileData['achievements'],
       summary: dto.summary ?? existing.summary,
     };
   }
