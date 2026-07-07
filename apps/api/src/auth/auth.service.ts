@@ -3,7 +3,7 @@ import {
   UnauthorizedException,
   ConflictException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../database/prisma.service';
 import { RegisterDto } from './dto/register.dto';
@@ -99,7 +99,7 @@ export class AuthService {
     const payload: JwtPayload = { sub: userId, email, role };
 
     const accessToken = this.jwtService.sign(payload, {
-      expiresIn: (this.configService.get<string>('JWT_EXPIRATION', '15m') || '15m') as any,
+      expiresIn: (this.configService.get<string>('JWT_EXPIRATION', '15m') || '15m') as JwtSignOptions['expiresIn'],
     });
 
     const refreshTokenValue = crypto.randomUUID();

@@ -1,6 +1,14 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
 import { CreateResumeDto, UpdateResumeDto } from './dto/resume.dto';
+
+interface ResumeJson {
+  templateId?: string | null;
+  sections?: Record<string, unknown>;
+  sectionOrder?: string[];
+  metadata?: Record<string, unknown>;
+}
 
 @Injectable()
 export class ResumeService {
@@ -31,7 +39,7 @@ export class ResumeService {
 
   async create(userId: string, dto: CreateResumeDto) {
     const profile = await this.prisma.careerProfile.findUnique({ where: { userId } });
-    const profileJson = (profile?.profileJson || {}) as any;
+    const profileJson = (profile?.profileJson || {}) as Record<string, unknown>;
     const latestTemplate = await this.prisma.template.findFirst({ where: { isActive: true } });
 
     const defaultJson = {
@@ -65,7 +73,7 @@ export class ResumeService {
       data: {
         resumeId: resume.id,
         version: 1,
-        resumeJson: defaultJson as any,
+        resumeJson: defaultJson as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -97,20 +105,20 @@ export class ResumeService {
         orderBy: { version: 'desc' },
       });
 
-      const currentJson = (latestVersion?.resumeJson || {}) as any;
+      const currentJson = (latestVersion?.resumeJson || {}) as ResumeJson;
       const updatedJson = {
         ...currentJson,
         templateId: dto.templateId ?? currentJson.templateId,
-        sections: dto.sections ? { ...currentJson.sections, ...dto.sections as any } : currentJson.sections,
+        sections: dto.sections ? { ...currentJson.sections as Record<string, unknown>, ...dto.sections as unknown as Record<string, unknown> } : currentJson.sections,
         sectionOrder: dto.sectionOrder || currentJson.sectionOrder,
-        metadata: dto.metadata ? { ...currentJson.metadata, ...dto.metadata as any } : currentJson.metadata,
+        metadata: dto.metadata ? { ...currentJson.metadata as Record<string, unknown>, ...dto.metadata as unknown as Record<string, unknown> } : currentJson.metadata,
       };
 
       const newVersion = await this.prisma.resumeVersion.create({
         data: {
           resumeId: id,
           version: (latestVersion?.version || 0) + 1,
-          resumeJson: updatedJson as any,
+          resumeJson: updatedJson as unknown as Prisma.InputJsonValue,
         },
       });
 
@@ -133,13 +141,14 @@ export class ResumeService {
 
     return this.prisma.resume.update({
       where: { id },
-      data: { deletedAt: new Date(), status: 'DELETED' as any },
+      data: { deletedAt: new Date(), status: 'DELETED' },
     });
   }
 
   async duplicate(id: string, userId: string) {
     const original = await this.findOne(id, userId);
-    const latestVersion = (original as any).versions?.[0];
+    const versions = (original as unknown as { versions: { resumeJson: Prisma.JsonValue }[] }).versions;
+    const latestVersion = versions?.[0];
 
     const resume = await this.prisma.resume.create({
       data: {
@@ -156,7 +165,7 @@ export class ResumeService {
       data: {
         resumeId: resume.id,
         version: 1,
-        resumeJson: (latestVersion?.resumeJson || {}) as any,
+        resumeJson: (latestVersion?.resumeJson || {}) as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -196,7 +205,7 @@ export class ResumeService {
       data: {
         resumeId: id,
         version: (latestVersion?.version || 0) + 1,
-        resumeJson: versionData.resumeJson as any,
+        resumeJson: versionData.resumeJson as unknown as Prisma.InputJsonValue,
       },
     });
 

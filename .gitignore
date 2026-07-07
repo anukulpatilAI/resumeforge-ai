@@ -34,3 +34,6 @@ apps/api/uploads/
 turbo_err.txt
 turbo_out.txt
 *.tsbuildinfo
+
+# Log files
+*.txt

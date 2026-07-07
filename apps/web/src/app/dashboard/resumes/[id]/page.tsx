@@ -5,7 +5,9 @@ import { useParams } from 'next/navigation';
 import { useResumeStore } from '@/store/resume.store';
 import { useProfileStore } from '@/store/profile.store';
 import { api } from '@/lib/api';
-import { Loader2, Save, Eye, History } from 'lucide-react';
+import html2pdf from 'html2pdf.js';
+import { Loader2, FileDown, Printer, Sparkles } from 'lucide-react';
+import { AiAssistant } from '@/components/ai-assistant';
 
 const sectionLabels: Record<string, string> = {
   personal: 'Personal',
@@ -23,9 +25,12 @@ export default function ResumeBuilderPage() {
   const id = params.id as string;
   const { currentResume, isLoading, isSaving, fetchResume, updateResume } = useResumeStore();
   const { profile, loadProfile } = useProfileStore();
-  const [activePanel, setActivePanel] = useState<'sections' | 'templates' | 'versions'>('sections');
+  const [activePanel, setActivePanel] = useState<'sections' | 'templates' | 'versions' | 'ai'>('sections');
   const [selectedSection, setSelectedSection] = useState<string>('personal');
+  const [pdfFormat, setPdfFormat] = useState<'A4' | 'LETTER'>('A4');
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchResume(id);
@@ -53,6 +58,37 @@ export default function ResumeBuilderPage() {
     debounceRef.current = setTimeout(() => updateResume(id, { sections: s }), 500);
   };
 
+  const downloadPdf = async () => {
+    if (!printRef.current) return;
+    setIsGeneratingPdf(true);
+    try {
+      const element = printRef.current;
+      await document.fonts.ready;
+      const scale = window.devicePixelRatio || 1;
+      await html2pdf()
+        .set({
+          margin: 10,
+          filename: `resume-${id}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: scale * 2, useCORS: true, logging: false, letterRendering: true },
+          jsPDF: { unit: 'pt', format: pdfFormat.toLowerCase(), orientation: 'portrait' },
+        })
+        .from(element)
+        .save();
+    } catch (err) {
+      console.error('PDF download failed:', err);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
+  const handlePrint = () => {
+    const origTitle = document.title;
+    document.title = '';
+    window.print();
+    setTimeout(() => { document.title = origTitle; }, 100);
+  };
+
   if (isLoading || !currentResume) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -64,9 +100,9 @@ export default function ResumeBuilderPage() {
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-4">
       {/* Left Panel — Sections */}
-      <div className="w-72 shrink-0 rounded-xl border border-[var(--border)] p-4 overflow-y-auto">
+      <div className="w-80 shrink-0 rounded-xl border border-[var(--border)] p-4 overflow-y-auto">
         <div className="flex gap-1 mb-4 rounded-lg bg-[var(--muted)] p-1">
-          {(['sections', 'templates', 'versions'] as const).map((p) => (
+          {(['sections', 'templates', 'ai', 'versions'] as const).map((p) => (
             <button
               key={p}
               onClick={() => setActivePanel(p)}
@@ -74,9 +110,49 @@ export default function ResumeBuilderPage() {
                 activePanel === p ? 'bg-[var(--background)] shadow-sm' : 'text-[var(--muted-foreground)]'
               }`}
             >
-              {p === 'sections' ? 'Sections' : p === 'templates' ? 'Templates' : 'History'}
+              {p === 'sections' ? 'Sections' : p === 'templates' ? 'Templates' : p === 'versions' ? 'History' : 'AI'}
             </button>
           ))}
+        </div>
+
+        {/* Export & Print */}
+        <div className="mb-4 rounded-lg border border-[var(--border)] p-3">
+          <div className="flex items-center gap-2 mb-2">
+            <FileDown className="h-4 w-4 text-[var(--primary)]" />
+            <span className="text-sm font-medium">Export PDF</span>
+          </div>
+          <div className="flex gap-2">
+            <select
+              value={pdfFormat}
+              onChange={(e) => setPdfFormat(e.target.value as 'A4' | 'LETTER')}
+              className="flex-1 rounded-lg border border-[var(--border)] bg-transparent px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+            >
+              <option value="A4">A4</option>
+              <option value="LETTER">Letter</option>
+            </select>
+            <button
+              onClick={downloadPdf}
+              disabled={isGeneratingPdf}
+              className="flex items-center gap-1 rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs text-white hover:opacity-90 disabled:opacity-50"
+            >
+              {isGeneratingPdf ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <FileDown className="h-3 w-3" />
+              )}
+              {isGeneratingPdf ? 'Generating...' : 'Download'}
+            </button>
+          </div>
+          <button
+            onClick={handlePrint}
+            className="mt-2 w-full flex items-center justify-center gap-1 rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs hover:bg-[var(--muted)]"
+          >
+            <Printer className="h-3 w-3" />
+            Print
+          </button>
+          <p className="mt-1.5 text-[10px] text-[var(--muted-foreground)] text-center">
+            Print and choose <span className="font-medium">Save as PDF</span> in the dialog (preserves fonts)
+          </p>
         </div>
 
         {activePanel === 'sections' && (
@@ -122,18 +198,59 @@ export default function ResumeBuilderPage() {
             onRestore={(v) => useResumeStore.getState().restoreVersion(id, v)}
           />
         )}
+
+        {activePanel === 'ai' && (
+          <div className="overflow-y-auto h-full pb-4">
+            <AiAssistant
+              resumeData={{
+                targetRole: resumeJson?.metadata?.targetRole,
+                skills: (sections.skills?.items || []).map((s: any) => s.name),
+                roles: (sections.experience?.items || []).map((e: any) => ({
+                  role: e.role,
+                  company: e.company,
+                  achievements: e.achievements || [],
+                })),
+                projects: (sections.projects?.items || []).map((p: any) => ({
+                  name: p.name,
+                  domain: p.domain,
+                  techStack: p.techStack || [],
+                })),
+                existingSummary: sections.summary?.text || '',
+              }}
+              onApplySummary={(text, format) => {
+                set({ ...sections, summary: { ...sections.summary, text, format } });
+              }}
+              onApplyExperience={(idx, bulletPoints) => {
+                const items = [...(sections.experience?.items || [])];
+                if (items[idx]) {
+                  items[idx] = { ...items[idx], achievements: bulletPoints };
+                  set({ ...sections, experience: { ...sections.experience, items } });
+                }
+              }}
+              onApplyProject={(idx, description) => {
+                const items = [...(sections.projects?.items || [])];
+                if (items[idx]) {
+                  items[idx] = { ...items[idx], description };
+                  set({ ...sections, projects: { ...sections.projects, items } });
+                }
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Center Panel — Preview */}
       <div className="flex-1 rounded-xl border border-[var(--border)] p-6 overflow-y-auto bg-[var(--muted)]/30">
-        <ResumePreview
-          key={resumeJson?.metadata?.selectedColorScheme || 'default'}
-          sections={sections}
-          sectionOrder={sectionOrder}
-          template={currentResume.template}
-          profile={profile}
-          metadata={resumeJson?.metadata}
-        />
+        <div ref={printRef} id="resume-print-area">
+          <ResumePreview
+            key={resumeJson?.metadata?.selectedColorScheme || 'default'}
+            sections={sections}
+            sectionOrder={sectionOrder}
+            template={currentResume.template}
+            profile={profile}
+            metadata={resumeJson?.metadata}
+          />
+        </div>
       </div>
 
       {/* Right Panel — Edit */}
@@ -360,12 +477,37 @@ function ResumePreview({ sections, sectionOrder, template, profile, metadata }: 
     );
   };
 
-  const renderSummary = (text: string, textColor?: string) => (
-    <div style={sectionDividerStyle}>
-      {renderSectionHeader('Professional Summary', textColor)}
-      <p style={{ fontSize: 13, lineHeight: 1.6, color: textColor || colors.text, fontFamily: fonts.body }}>{text || '—'}</p>
-    </div>
-  );
+  const renderBold = (t: string, tc: string) => {
+    const parts = t.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i} style={{ fontWeight: 700, color: tc }}>{part.slice(2, -2)}</strong>;
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
+
+  const renderSummary = (text: string, textColor?: string, format?: string) => {
+    const isBullet = format === 'bulletPoints';
+    const bullets = text ? text.split('\n').filter(Boolean) : [];
+    return (
+      <div style={sectionDividerStyle}>
+        {renderSectionHeader('Professional Summary', textColor)}
+        {isBullet && bullets.length > 0 ? (
+          <div style={{ marginTop: 8, fontSize: 13, lineHeight: 1.6, color: textColor || colors.text, fontFamily: fonts.body }}>
+            {bullets.map((b, i) => (
+              <div key={i} style={{ display: 'flex', gap: 6, marginBottom: 4 }}>
+                <span style={{ flexShrink: 0 }}>•</span>
+                <span>{renderBold(b, textColor || colors.text)}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ marginTop: 8, fontSize: 13, lineHeight: 1.6, color: textColor || colors.text, fontFamily: fonts.body }}>{text ? renderBold(text, textColor || colors.text) : '—'}</p>
+        )}
+      </div>
+    );
+  };
 
   const renderSkills = (items: any[], textColor?: string) => {
     const tc = textColor || colors.text;
@@ -511,7 +653,18 @@ function ResumePreview({ sections, sectionOrder, template, profile, metadata }: 
         <hr style={{ border: 'none', borderTop: `1px solid ${sidebarText}33`, margin: '16px 0' }} />
         <div>
           <h3 style={{ fontSize: 13, fontWeight: 600, color: sidebarText, margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: 1 }}>About</h3>
-          <div style={{ fontSize: 12, lineHeight: 1.6, color: sidebarText + 'dd' }}>{sm}</div>
+          {sections?.summary?.format === 'bulletPoints' ? (
+            <div style={{ marginTop: 6, fontSize: 12, lineHeight: 1.6, color: sidebarText + 'dd' }}>
+              {(sm || '').split('\n').filter(Boolean).map((b: string, i: number) => (
+                <div key={i} style={{ display: 'flex', gap: 5, marginBottom: 3 }}>
+                  <span style={{ flexShrink: 0 }}>•</span>
+                  <span>{renderBold(b, sidebarText)}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ marginTop: 6, fontSize: 12, lineHeight: 1.6, color: sidebarText + 'dd' }}>{sm ? renderBold(sm, sidebarText) : ''}</div>
+          )}
         </div>
         <hr style={{ border: 'none', borderTop: `1px solid ${sidebarText}33`, margin: '16px 0' }} />
         <div><h3 style={{ fontSize: 13, fontWeight: 600, color: sidebarText, margin: '0 0 8px', textTransform: 'uppercase', letterSpacing: 1 }}>Skills</h3>{sk.map((s: any) => <span key={s.name} style={{ display: 'inline-block', border: `1px solid ${sidebarText}44`, color: sidebarText, padding: '2px 8px', fontSize: 11, borderRadius: 3, margin: '0 4px 4px 0' }}>{s.name}</span>)}</div>
@@ -548,7 +701,7 @@ function ResumePreview({ sections, sectionOrder, template, profile, metadata }: 
             {leftSec.map((key: string) => {
               const section = sections[key];
               if (section && section.visible === false) return null;
-              if (key === 'summary') return <React.Fragment key={key}>{renderSummary(section?.text || DEMO_DATA.summary)}</React.Fragment>;
+              if (key === 'summary') return <React.Fragment key={key}>{renderSummary(section?.text || DEMO_DATA.summary, colors.text, section?.format)}</React.Fragment>;
               if (key === 'skills') return <React.Fragment key={key}>{renderSkills(getData('skills', section))}</React.Fragment>;
               return null;
             })}
@@ -573,7 +726,7 @@ function ResumePreview({ sections, sectionOrder, template, profile, metadata }: 
         const section = sections[key];
         if (!section || section.visible === false) return null;
         if (key === 'personal') return null;
-        if (key === 'summary') return <React.Fragment key={key}>{renderSummary(section.text || DEMO_DATA.summary)}</React.Fragment>;
+        if (key === 'summary') return <React.Fragment key={key}>{renderSummary(section.text || DEMO_DATA.summary, colors.text, section.format)}</React.Fragment>;
         const items = section.items || [];
         const displayItems = items.length > 0 ? items : DEMO_DATA[key as keyof typeof DEMO_DATA] || [];
         if (key === 'skills') return <React.Fragment key={key}>{renderSkills(displayItems as any[])}</React.Fragment>;
@@ -587,6 +740,7 @@ function ResumePreview({ sections, sectionOrder, template, profile, metadata }: 
 function SectionEditor({ sectionKey, section, profile, onChange }: any) {
   const data = section.data || {};
   const items = section.items || [];
+  const [newInputs, setNewInputs] = useState<Record<string, string>>({});
 
   if (sectionKey === 'personal') {
     return (
@@ -602,8 +756,57 @@ function SectionEditor({ sectionKey, section, profile, onChange }: any) {
   }
 
   if (sectionKey === 'summary') {
+    const fmt = section.format || 'paragraph';
+    const setFmt = (f: 'paragraph' | 'bulletPoints') => onChange({ ...section, format: f });
+    const text = section.text || '';
+    const setText = (t: string) => onChange({ ...section, text: t });
+    const bullets = text ? text.split('\n').filter(Boolean) : [''];
+    const setBullets = (b: string[]) => setText(b.join('\n'));
     return (
-      <textarea value={section.text || ''} onChange={(e) => onChange({ ...section, text: e.target.value })} rows={6} className="w-full rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" placeholder="Write your professional summary..." />
+      <div className="space-y-3">
+        <div className="flex gap-0.5 rounded-md bg-[var(--muted)] p-0.5 w-fit">
+          {(['paragraph', 'bulletPoints'] as const).map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => setFmt(opt)}
+              className={`rounded px-3 py-1 text-xs font-medium ${
+                fmt === opt ? 'bg-[var(--background)] shadow-sm' : 'text-[var(--muted-foreground)]'
+              }`}
+            >
+              {opt === 'paragraph' ? 'Paragraph' : 'Bullet Points'}
+            </button>
+          ))}
+        </div>
+        <p className="text-[10px] text-[var(--muted-foreground)]">Use **bold** to make text bold</p>
+        {fmt === 'paragraph' ? (
+          <textarea value={text} onChange={(e) => setText(e.target.value)} rows={6} className="w-full rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" placeholder="Write your professional summary..." />
+        ) : (
+          <div className="space-y-1">
+            {bullets.map((b: string, i: number) => (
+              <div key={i} className="flex items-center gap-1">
+                <span className="text-[var(--muted-foreground)] shrink-0">•</span>
+                <input
+                  value={b}
+                  onChange={(e) => {
+                    const copy = [...bullets];
+                    copy[i] = e.target.value;
+                    setBullets(copy);
+                  }}
+                  placeholder={`Bullet point ${i + 1}`}
+                  className="flex-1 rounded-lg border border-[var(--border)] bg-transparent px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                />
+                {bullets.length > 1 && (
+                  <button onClick={() => setBullets(bullets.filter((_: string, j: number) => j !== i))} className="text-red-500 hover:text-red-700 shrink-0">
+                    ✕
+                  </button>
+                )}
+              </div>
+            ))}
+            <button onClick={() => setBullets([...bullets, ''])} className="text-xs text-[var(--primary)] hover:underline">+ Add bullet</button>
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -628,13 +831,14 @@ function SectionEditor({ sectionKey, section, profile, onChange }: any) {
   };
 
   const addArrayItem = (i: number, field: string) => {
-    const val = prompt('Enter value:');
-    if (val) {
-      const updated = items.map((item: any, idx: number) =>
-        idx === i ? { ...item, [field]: [...(item[field] || []), val] } : item
-      );
-      onChange({ ...section, items: updated });
-    }
+    const key = `${i}-${field}`;
+    const val = newInputs[key];
+    if (!val?.trim()) return;
+    const updated = items.map((item: any, idx: number) =>
+      idx === i ? { ...item, [field]: [...(item[field] || []), val.trim()] } : item
+    );
+    onChange({ ...section, items: updated });
+    setNewInputs((p) => ({ ...p, [key]: '' }));
   };
 
   const removeArrayItem = (i: number, field: string, idx: number) => {
@@ -664,7 +868,16 @@ function SectionEditor({ sectionKey, section, profile, onChange }: any) {
                       </span>
                     ))}
                   </div>
-                  <button onClick={() => addArrayItem(i, key)} className="text-xs text-[var(--primary)]">+ Add</button>
+                  <div className="flex gap-1">
+                    <input
+                      value={newInputs[`${i}-${key}`] || ''}
+                      onChange={(e) => setNewInputs((p) => ({ ...p, [`${i}-${key}`]: e.target.value }))}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addArrayItem(i, key); } }}
+                      placeholder="Add item..."
+                      className="flex-1 rounded border border-[var(--border)] bg-transparent px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
+                    />
+                    <button onClick={() => addArrayItem(i, key)} className="text-xs text-[var(--primary)] whitespace-nowrap">+ Add</button>
+                  </div>
                 </div>
               );
             }

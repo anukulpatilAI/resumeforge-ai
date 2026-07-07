@@ -15,4 +15,8 @@ export class TemplatesService {
   async findOne(id: string) {
     return this.prisma.template.findUnique({ where: { id } });
   }
+
+  async findFirst() {
+    return this.prisma.template.findFirst({ where: { isActive: true } });
+  }
 }

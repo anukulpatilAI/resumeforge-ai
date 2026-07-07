@@ -27,3 +27,29 @@ body {
   color: var(--foreground);
   font-family: 'Inter', system-ui, sans-serif;
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #resume-print-area,
+  #resume-print-area * {
+    visibility: visible;
+  }
+  #resume-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  #resume-print-area > div {
+    max-width: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+  @page {
+    margin: 10mm;
+  }
+}
