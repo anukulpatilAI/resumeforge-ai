@@ -6,7 +6,8 @@ import { useResumeStore } from '@/store/resume.store';
 import { useProfileStore } from '@/store/profile.store';
 import { api } from '@/lib/api';
 import html2pdf from 'html2pdf.js';
-import { Loader2, FileDown, Printer, Sparkles, FileText, ChevronLeft, PanelLeft, PanelRight } from 'lucide-react';
+import { asBlob as htmlDocxAsBlob } from 'html-docx-js/dist/html-docx';
+import { Loader2, FileDown, Printer, Sparkles, FileText, ChevronLeft, PanelLeft, PanelRight, FileCode, FileType } from 'lucide-react';
 import { AiAssistant } from '@/components/ai-assistant';
 import { AtsScorer } from '@/components/ats-scorer';
 
@@ -30,6 +31,8 @@ export default function ResumeBuilderPage() {
   const [selectedSection, setSelectedSection] = useState<string>('personal');
   const [pdfFormat, setPdfFormat] = useState<'A4' | 'LETTER'>('A4');
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isExportingDocx, setIsExportingDocx] = useState(false);
+  const [isExportingTxt, setIsExportingTxt] = useState(false);
   const [mobileView, setMobileView] = useState<'tools' | 'preview' | 'edit'>('preview');
   const [showMobilePanel, setShowMobilePanel] = useState<'left' | 'right' | null>(null);
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
@@ -92,6 +95,93 @@ export default function ResumeBuilderPage() {
     document.title = '';
     window.print();
     setTimeout(() => { document.title = origTitle; }, 100);
+  };
+
+  const buildPlainText = () => {
+    const lines: string[] = [];
+    const pd = sections.personal?.data;
+    if (pd?.fullName) lines.push(pd.fullName);
+    if (pd?.email || pd?.phone) lines.push([pd.email, pd.phone].filter(Boolean).join(' | '));
+    if (pd?.location) lines.push(pd.location);
+    if (pd?.linkedin || pd?.github) lines.push([pd.linkedin, pd.github].filter(Boolean).join(' | '));
+    lines.push('');
+    for (const key of sectionOrder) {
+      if (key === 'personal') continue;
+      const section = sections[key];
+      if (!section || section.visible === false) continue;
+      lines.push(sectionLabels[key] || key);
+      lines.push('');
+      if (key === 'summary') {
+        lines.push(section.text || '');
+      } else if (key === 'skills') {
+        for (const s of (section.items || []) as any[]) lines.push(`- ${s.name} (${s.level || ''})`);
+      } else if (key === 'education') {
+        for (const item of (section.items || []) as any[]) {
+          lines.push(`${item.degree} — ${item.institution}`);
+          if (item.startYear) lines.push(`  ${item.startYear}${item.endYear ? ` – ${item.endYear}` : ''}${item.cgpa ? ` | GPA: ${item.cgpa}` : ''}`);
+        }
+      } else if (key === 'experience') {
+        for (const item of (section.items || []) as any[]) {
+          lines.push(`${item.role} at ${item.company}`);
+          lines.push(`  ${item.startDate} – ${item.isCurrent ? 'Present' : item.endDate}`);
+          for (const a of item.achievements || []) lines.push(`  • ${a}`);
+        }
+      } else if (key === 'projects') {
+        for (const item of (section.items || []) as any[]) {
+          lines.push(`${item.name} (${item.domain || ''})`);
+          if (item.description) lines.push(`  ${item.description}`);
+        }
+      } else if (key === 'certifications') {
+        for (const item of (section.items || []) as any[]) {
+          lines.push(`${item.name} — ${item.issuer}${item.date ? ` (${item.date})` : ''}`);
+        }
+      } else if (key === 'languages') {
+        for (const item of (section.items || []) as any[]) {
+          lines.push(`- ${item.name} (${item.proficiency})`);
+        }
+      }
+      lines.push('');
+    }
+    return lines.join('\n');
+  };
+
+  const downloadTxt = () => {
+    setIsExportingTxt(true);
+    try {
+      const text = buildPlainText();
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `resume-${id}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsExportingTxt(false);
+    }
+  };
+
+  const downloadDocx = () => {
+    if (!printRef.current) return;
+    setIsExportingDocx(true);
+    try {
+      const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>${printRef.current.innerHTML}</body></html>`;
+      const blob = htmlDocxAsBlob(html);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `resume-${id}.docx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('DOCX export failed:', err);
+    } finally {
+      setIsExportingDocx(false);
+    }
   };
 
   if (isLoading || !currentResume) {
@@ -205,43 +295,90 @@ export default function ResumeBuilderPage() {
         </div>
 
         {/* Export & Print */}
-        <div className="mb-4 rounded-lg border border-[var(--border)] p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <FileDown className="h-4 w-4 text-[var(--primary)]" />
-            <span className="text-sm font-medium">Export PDF</span>
-          </div>
-          <div className="flex gap-2">
-            <select
-              value={pdfFormat}
-              onChange={(e) => setPdfFormat(e.target.value as 'A4' | 'LETTER')}
-              className="flex-1 rounded-lg border border-[var(--border)] bg-transparent px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-            >
-              <option value="A4">A4</option>
-              <option value="LETTER">Letter</option>
-            </select>
+        <div className="mb-4 rounded-lg border border-[var(--border)] p-3 space-y-3">
+          {/* PDF */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <FileDown className="h-4 w-4 text-[var(--primary)]" />
+              <span className="text-sm font-medium">Export PDF</span>
+            </div>
+            <div className="flex gap-2">
+              <select
+                value={pdfFormat}
+                onChange={(e) => setPdfFormat(e.target.value as 'A4' | 'LETTER')}
+                className="flex-1 rounded-lg border border-[var(--border)] bg-transparent px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+              >
+                <option value="A4">A4</option>
+                <option value="LETTER">Letter</option>
+              </select>
+              <button
+                onClick={downloadPdf}
+                disabled={isGeneratingPdf}
+                className="flex items-center gap-1 rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs text-white hover:opacity-90 disabled:opacity-50"
+              >
+                {isGeneratingPdf ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <FileDown className="h-3 w-3" />
+                )}
+                {isGeneratingPdf ? 'Generating...' : 'Download'}
+              </button>
+            </div>
             <button
-              onClick={downloadPdf}
-              disabled={isGeneratingPdf}
-              className="flex items-center gap-1 rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs text-white hover:opacity-90 disabled:opacity-50"
+              onClick={handlePrint}
+              className="mt-2 w-full flex items-center justify-center gap-1 rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs hover:bg-[var(--muted)]"
             >
-              {isGeneratingPdf ? (
+              <Printer className="h-3 w-3" />
+              Print
+            </button>
+            <p className="mt-1.5 text-[10px] text-[var(--muted-foreground)] text-center">
+              Print and choose <span className="font-medium">Save as PDF</span> in the dialog (preserves fonts)
+            </p>
+          </div>
+
+          <hr className="border-[var(--border)]" />
+
+          {/* DOCX */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <FileCode className="h-4 w-4 text-[var(--primary)]" />
+              <span className="text-sm font-medium">Export DOCX</span>
+            </div>
+            <button
+              onClick={downloadDocx}
+              disabled={isExportingDocx}
+              className="w-full flex items-center justify-center gap-1 rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs text-white hover:opacity-90 disabled:opacity-50"
+            >
+              {isExportingDocx ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                <FileDown className="h-3 w-3" />
+                <FileCode className="h-3 w-3" />
               )}
-              {isGeneratingPdf ? 'Generating...' : 'Download'}
+              {isExportingDocx ? 'Generating...' : 'Download .docx'}
             </button>
           </div>
-          <button
-            onClick={handlePrint}
-            className="mt-2 w-full flex items-center justify-center gap-1 rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs hover:bg-[var(--muted)]"
-          >
-            <Printer className="h-3 w-3" />
-            Print
-          </button>
-          <p className="mt-1.5 text-[10px] text-[var(--muted-foreground)] text-center">
-            Print and choose <span className="font-medium">Save as PDF</span> in the dialog (preserves fonts)
-          </p>
+
+          <hr className="border-[var(--border)]" />
+
+          {/* TXT */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <FileType className="h-4 w-4 text-[var(--primary)]" />
+              <span className="text-sm font-medium">Export TXT</span>
+            </div>
+            <button
+              onClick={downloadTxt}
+              disabled={isExportingTxt}
+              className="w-full flex items-center justify-center gap-1 rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs hover:bg-[var(--muted)] disabled:opacity-50"
+            >
+              {isExportingTxt ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <FileType className="h-3 w-3" />
+              )}
+              {isExportingTxt ? 'Generating...' : 'Download .txt'}
+            </button>
+          </div>
         </div>
 
         {activePanel === 'sections' && (
