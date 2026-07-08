@@ -80,12 +80,12 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="flex gap-1 rounded-xl border border-[var(--border)] p-1 overflow-x-auto">
+      <div className="flex gap-1 rounded-xl border border-[var(--border)] p-1 overflow-x-auto scrollbar-none">
         {steps.map((s, i) => (
           <button
             key={s.label}
             onClick={() => setStep(i)}
-            className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap ${
+            className={`flex-1 min-w-fit rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
               i === step
                 ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
                 : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
@@ -96,15 +96,15 @@ export default function ProfilePage() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-[var(--border)] p-6">
+      <div className="rounded-xl border border-[var(--border)] p-4 sm:p-6">
         <StepComponent />
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-3">
         <button
           onClick={() => setStep(Math.max(0, step - 1))}
           disabled={step === 0}
-          className="rounded-lg border border-[var(--border)] px-6 py-2 text-sm font-medium hover:bg-[var(--muted)] disabled:opacity-50"
+          className="flex-1 sm:flex-none rounded-lg border border-[var(--border)] px-6 py-2 text-sm font-medium hover:bg-[var(--muted)] disabled:opacity-50"
         >
           Previous
         </button>
@@ -112,14 +112,14 @@ export default function ProfilePage() {
           <button
             onClick={() => saveProfile()}
             disabled={isSaving}
-            className="rounded-lg bg-green-600 px-6 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+            className="flex-1 sm:flex-none rounded-lg bg-green-600 px-6 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
           >
             {isSaving ? 'Saving...' : 'Save Profile'}
           </button>
         ) : (
           <button
             onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
-            className="rounded-lg bg-[var(--primary)] px-6 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90"
+            className="flex-1 sm:flex-none rounded-lg bg-[var(--primary)] px-6 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90"
           >
             Next
           </button>

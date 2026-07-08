@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen">
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-[var(--border)] bg-[var(--background)] transition-transform duration-200 lg:relative lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-72 sm:w-64 transform border-r border-[var(--border)] bg-[var(--background)] transition-transform duration-200 lg:relative lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex h-16 items-center justify-between px-6 border-b border-[var(--border)]">
           <h2 className="text-lg font-bold">ResumeForge AI</h2>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
@@ -93,13 +93,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="flex h-16 items-center gap-4 border-b border-[var(--border)] px-6">
+        <header className="flex h-16 items-center gap-4 border-b border-[var(--border)] px-4 sm:px-6">
           <button onClick={() => setSidebarOpen(true)} className="lg:hidden">
             <Menu className="h-5 w-5" />
           </button>
           <div className="flex-1" />
         </header>
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

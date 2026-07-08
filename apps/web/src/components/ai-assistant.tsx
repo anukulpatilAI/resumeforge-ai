@@ -142,14 +142,14 @@ export function AiAssistant({ resumeData, onApplySummary, onApplyExperience, onA
     if (hasBullets) {
       const items = (result.bulletPoints || result.achievements || []) as string[];
       return (
-        <ul className="list-disc list-inside pr-8 space-y-0.5">
+        <ul className="list-disc list-inside pr-2 sm:pr-8 space-y-0.5">
           {items.map((bp, i) => <li key={i}>{bp}</li>)}
         </ul>
       );
     }
     if (hasParagraph) {
       const text = (result.summary || result.description || '') as string;
-      return <p className="pr-8">{text}</p>;
+      return <p className="pr-2 sm:pr-8">{text}</p>;
     }
     return null;
   };
@@ -218,10 +218,10 @@ export function AiAssistant({ resumeData, onApplySummary, onApplyExperience, onA
           </div>
         )}
         {summaryResult && (
-          <div className="relative rounded bg-[var(--muted)] p-2 text-xs">
-            {renderResult('summary')}
-            <div className="absolute top-1 right-1 flex gap-1">
-              <div className="flex gap-1">
+          <div className="rounded bg-[var(--muted)] p-2 text-xs">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">{renderResult('summary')}</div>
+              <div className="flex gap-1 shrink-0">
                 <button
                   onClick={() => {
                     const fmt = getResultFormat('summary');
@@ -276,25 +276,27 @@ export function AiAssistant({ resumeData, onApplySummary, onApplyExperience, onA
                 </div>
               )}
               {expResult && (
-                <div className="relative rounded bg-[var(--muted)] p-2 text-xs">
+                <div className="rounded bg-[var(--muted)] p-2 text-xs">
                   <p className="text-[10px] font-medium mb-1 text-[var(--muted-foreground)]">Rewritten:</p>
-                  {renderResult(expKey)}
-                  <div className="absolute top-1 right-1 flex gap-1">
-                    <button
-                      onClick={() => {
-                        const bp = (expResult.bulletPoints || expResult.achievements) as string[] | undefined;
-                        if (bp) { onApplyExperience(idx, bp); clearResult(expKey); return; }
-                        const txt = (expResult.summary || expResult.description || expResult.text || '') as string;
-                        if (txt.trim()) onApplyExperience(idx, [txt]);
-                        clearResult(expKey);
-                      }}
-                      className="text-green-600 hover:text-green-800"
-                    >
-                      <Check className="h-4 w-4" />
-                    </button>
-                    <button onClick={() => clearResult(expKey)} className="text-red-500 hover:text-red-700">
-                      <X className="h-4 w-4" />
-                    </button>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">{renderResult(expKey)}</div>
+                    <div className="flex gap-1 shrink-0">
+                      <button
+                        onClick={() => {
+                          const bp = (expResult.bulletPoints || expResult.achievements) as string[] | undefined;
+                          if (bp) { onApplyExperience(idx, bp); clearResult(expKey); return; }
+                          const txt = (expResult.summary || expResult.description || expResult.text || '') as string;
+                          if (txt.trim()) onApplyExperience(idx, [txt]);
+                          clearResult(expKey);
+                        }}
+                        className="text-green-600 hover:text-green-800"
+                      >
+                        <Check className="h-4 w-4" />
+                      </button>
+                      <button onClick={() => clearResult(expKey)} className="text-red-500 hover:text-red-700">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -321,25 +323,27 @@ export function AiAssistant({ resumeData, onApplySummary, onApplyExperience, onA
                 </div>
               )}
               {achResult && (
-                <div className="relative rounded bg-[var(--muted)] p-2 text-xs">
+                <div className="rounded bg-[var(--muted)] p-2 text-xs">
                   <p className="text-[10px] font-medium mb-1 text-[var(--muted-foreground)]">Achievements:</p>
-                  {renderResult(achKey)}
-                  <div className="absolute top-1 right-1 flex gap-1">
-                    <button
-                      onClick={() => {
-                        const bp = (achResult.bulletPoints || achResult.achievements) as string[] | undefined;
-                        if (bp) { onApplyExperience(idx, bp); clearResult(achKey); return; }
-                        const txt = (achResult.summary || achResult.description || achResult.text || '') as string;
-                        if (txt.trim()) onApplyExperience(idx, [txt]);
-                        clearResult(achKey);
-                      }}
-                      className="text-green-600 hover:text-green-800"
-                    >
-                      <Check className="h-4 w-4" />
-                    </button>
-                    <button onClick={() => clearResult(achKey)} className="text-red-500 hover:text-red-700">
-                      <X className="h-4 w-4" />
-                    </button>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">{renderResult(achKey)}</div>
+                    <div className="flex gap-1 shrink-0">
+                      <button
+                        onClick={() => {
+                          const bp = (achResult.bulletPoints || achResult.achievements) as string[] | undefined;
+                          if (bp) { onApplyExperience(idx, bp); clearResult(achKey); return; }
+                          const txt = (achResult.summary || achResult.description || achResult.text || '') as string;
+                          if (txt.trim()) onApplyExperience(idx, [txt]);
+                          clearResult(achKey);
+                        }}
+                        className="text-green-600 hover:text-green-800"
+                      >
+                        <Check className="h-4 w-4" />
+                      </button>
+                      <button onClick={() => clearResult(achKey)} className="text-red-500 hover:text-red-700">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -374,22 +378,24 @@ export function AiAssistant({ resumeData, onApplySummary, onApplyExperience, onA
               </div>
             )}
             {projResult && (
-              <div className="relative rounded bg-[var(--muted)] p-2 text-xs">
-                {renderResult(projKey)}
-                <div className="absolute top-1 right-1 flex gap-1">
-                  <button
-                    onClick={() => {
-                      const t = getResultText(projKey);
-                      if (t.trim()) onApplyProject(idx, t);
-                      clearResult(projKey);
-                    }}
-                    className="text-green-600 hover:text-green-800"
-                  >
-                    <Check className="h-4 w-4" />
-                  </button>
-                  <button onClick={() => clearResult(projKey)} className="text-red-500 hover:text-red-700">
-                    <X className="h-4 w-4" />
-                  </button>
+              <div className="rounded bg-[var(--muted)] p-2 text-xs">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">{renderResult(projKey)}</div>
+                  <div className="flex gap-1 shrink-0">
+                    <button
+                      onClick={() => {
+                        const t = getResultText(projKey);
+                        if (t.trim()) onApplyProject(idx, t);
+                        clearResult(projKey);
+                      }}
+                      className="text-green-600 hover:text-green-800"
+                    >
+                      <Check className="h-4 w-4" />
+                    </button>
+                    <button onClick={() => clearResult(projKey)} className="text-red-500 hover:text-red-700">
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

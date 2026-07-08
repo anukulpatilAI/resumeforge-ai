@@ -11,7 +11,7 @@
 | 4      | Resume Builder   | ✅ Complete |
 | 5      | PDF Generator    | ⚠️ Partial  |
 | 6      | AI Assistant     | ✅ Complete |
-| 7      | ATS Analyzer     | ⬜ Pending  |
+| 7      | ATS Analyzer     | ✅ Complete |
 | 8      | JD Matcher       | ⬜ Pending  |
 | 9      | Testing & Polish | ⬜ Pending  |
 | 10     | Deployment       | ⬜ Pending  |
@@ -112,11 +112,15 @@ The left panel's "Export PDF" section now has:
 | No request timeouts | All 3 providers use `AbortController` with timeout |
 | Undocumented model vars | Added `OLLAMA_MODEL`, `GEMINI_MODEL`, `OPENROUTER_MODEL` to `.env.example` |
 
-### Sprint 7 — ATS Analyzer
+### Sprint 7 — ATS Analyzer ✅
 
-- Rule-based scoring (keywords, formatting, readability, length)
-- AI-enhanced suggestions
-- Score dashboard + improvement list
+- Rule-based scoring engine (keywords, formatting, readability, length)
+- Keyword maps for 8 roles (Software Engineer, Frontend, Backend, Full Stack, QA, DevOps, Data Scientist, Data Engineer)
+- Score dashboard with SVG score ring, 4 sub-score bars, keyword match tags
+- Severity-grouped suggestion cards (high/medium/low)
+- REST endpoint: `POST /api/v1/ats/analyze`
+- Zustand store for ATS state management
+- New "ATS" tab in resume builder sidebar
 
 ### Sprint 8 — JD Matcher
 

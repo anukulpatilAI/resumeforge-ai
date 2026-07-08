@@ -6,8 +6,9 @@ import { useResumeStore } from '@/store/resume.store';
 import { useProfileStore } from '@/store/profile.store';
 import { api } from '@/lib/api';
 import html2pdf from 'html2pdf.js';
-import { Loader2, FileDown, Printer, Sparkles } from 'lucide-react';
+import { Loader2, FileDown, Printer, Sparkles, FileText, ChevronLeft, PanelLeft, PanelRight } from 'lucide-react';
 import { AiAssistant } from '@/components/ai-assistant';
+import { AtsScorer } from '@/components/ats-scorer';
 
 const sectionLabels: Record<string, string> = {
   personal: 'Personal',
@@ -25,10 +26,14 @@ export default function ResumeBuilderPage() {
   const id = params.id as string;
   const { currentResume, isLoading, isSaving, fetchResume, updateResume } = useResumeStore();
   const { profile, loadProfile } = useProfileStore();
-  const [activePanel, setActivePanel] = useState<'sections' | 'templates' | 'versions' | 'ai'>('sections');
+  const [activePanel, setActivePanel] = useState<'sections' | 'templates' | 'versions' | 'ai' | 'ats'>('sections');
   const [selectedSection, setSelectedSection] = useState<string>('personal');
   const [pdfFormat, setPdfFormat] = useState<'A4' | 'LETTER'>('A4');
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [mobileView, setMobileView] = useState<'tools' | 'preview' | 'edit'>('preview');
+  const [showMobilePanel, setShowMobilePanel] = useState<'left' | 'right' | null>(null);
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
+  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
 
@@ -97,20 +102,104 @@ export default function ResumeBuilderPage() {
     );
   }
 
+  const showLeftPanel = showMobilePanel === 'left';
+  const showRightPanel = showMobilePanel === 'right';
+
   return (
-    <div className="flex h-[calc(100vh-8rem)] gap-4">
+    <div className="flex flex-col xl:flex-row h-auto xl:h-[calc(100vh-8rem)] gap-4">
+      {/* Mobile toolbar */}
+      <div className="flex xl:hidden gap-1 rounded-xl border border-[var(--border)] p-1 overflow-x-auto">
+        <button
+          onClick={() => setShowMobilePanel(showLeftPanel ? null : 'left')}
+          className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium whitespace-nowrap ${
+            showLeftPanel ? 'bg-[var(--primary)] text-[var(--primary-foreground)]' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          <FileDown className="h-3.5 w-3.5" />
+          Tools
+        </button>
+        <button
+          onClick={() => setMobileView('preview')}
+          className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium whitespace-nowrap ${
+            mobileView === 'preview' ? 'bg-[var(--primary)] text-[var(--primary-foreground)]' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          <FileText className="h-3.5 w-3.5" />
+          Preview
+        </button>
+        <button
+          onClick={() => setShowMobilePanel(showRightPanel ? null : 'right')}
+          className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium whitespace-nowrap ${
+            showRightPanel ? 'bg-[var(--primary)] text-[var(--primary-foreground)]' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          Edit
+        </button>
+      </div>
+
       {/* Left Panel — Sections */}
-      <div className="w-80 shrink-0 rounded-xl border border-[var(--border)] p-4 overflow-y-auto">
-        <div className="flex gap-1 mb-4 rounded-lg bg-[var(--muted)] p-1">
-          {(['sections', 'templates', 'ai', 'versions'] as const).map((p) => (
+      <div className={`${!showLeftPanel && 'hidden xl:block'} w-full xl:${leftPanelCollapsed ? 'w-12' : 'w-80'} shrink-0 rounded-xl border border-[var(--border)] ${leftPanelCollapsed ? 'p-2' : 'p-4'} overflow-y-auto max-h-[70vh] xl:max-h-none transition-all duration-200`}>
+        {/* Collapse toggle */}
+        <div className="hidden xl:flex items-center justify-end mb-2">
+          <button
+            onClick={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
+            className="rounded p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)]"
+            title={leftPanelCollapsed ? 'Expand panel' : 'Collapse panel'}
+          >
+            <ChevronLeft className={`h-4 w-4 transition-transform ${leftPanelCollapsed ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+
+        {leftPanelCollapsed ? (
+          <div className="flex flex-col items-center gap-3 py-2">
+            {(['sections', 'templates', 'ai', 'ats', 'versions'] as const).map((p) => {
+              const icon = {
+                sections: FileText,
+                templates: PanelLeft,
+                ai: Sparkles,
+                ats: FileText,
+                versions: FileText,
+              }[p];
+              const Icon = icon;
+              return (
+                <button
+                  key={p}
+                  onClick={() => { setActivePanel(p); setLeftPanelCollapsed(false); }}
+                  className={`rounded-lg p-2 ${activePanel === p ? 'bg-[var(--primary)]/10 text-[var(--primary)]' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)]'}`}
+                  title={p === 'sections' ? 'Sections' : p === 'templates' ? 'Templates' : p === 'versions' ? 'History' : p === 'ai' ? 'AI' : 'ATS'}
+                >
+                  <Icon className="h-5 w-5" />
+                </button>
+              );
+            })}
+            <div className="w-8 border-t border-[var(--border)]" />
+            <button
+              onClick={() => { setLeftPanelCollapsed(false); }}
+              className="rounded-lg p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)]"
+              title="Export PDF"
+            >
+              <FileDown className="h-5 w-5" />
+            </button>
+            <button
+              onClick={handlePrint}
+              className="rounded-lg p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)]"
+              title="Print"
+            >
+              <Printer className="h-5 w-5" />
+            </button>
+          </div>
+        ) : (
+        <div className="space-y-4"><div className="flex gap-1 mb-4 rounded-lg bg-[var(--muted)] p-1 overflow-x-auto">
+          {(['sections', 'templates', 'ai', 'ats', 'versions'] as const).map((p) => (
             <button
               key={p}
               onClick={() => setActivePanel(p)}
-              className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium capitalize ${
+              className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium capitalize whitespace-nowrap ${
                 activePanel === p ? 'bg-[var(--background)] shadow-sm' : 'text-[var(--muted-foreground)]'
               }`}
             >
-              {p === 'sections' ? 'Sections' : p === 'templates' ? 'Templates' : p === 'versions' ? 'History' : 'AI'}
+              {p === 'sections' ? 'Sections' : p === 'templates' ? 'Templates' : p === 'versions' ? 'History' : p === 'ai' ? 'AI' : 'ATS'}
             </button>
           ))}
         </div>
@@ -169,7 +258,7 @@ export default function ResumeBuilderPage() {
                 <span>{sectionLabels[key] || key}</span>
                 <button
                   onClick={(e) => { e.stopPropagation(); toggleSection(key); }}
-                  className={`h-5 w-10 rounded-full transition-colors ${
+                  className={`h-5 w-10 rounded-full transition-colors shrink-0 ${
                     sections[key]?.visible !== false ? 'bg-[var(--primary)]' : 'bg-[var(--border)]'
                   }`}
                 >
@@ -200,7 +289,7 @@ export default function ResumeBuilderPage() {
         )}
 
         {activePanel === 'ai' && (
-          <div className="overflow-y-auto h-full pb-4">
+          <div className="overflow-y-auto max-h-96 xl:max-h-none pb-4">
             <AiAssistant
               resumeData={{
                 targetRole: resumeJson?.metadata?.targetRole,
@@ -237,10 +326,23 @@ export default function ResumeBuilderPage() {
             />
           </div>
         )}
+
+        {activePanel === 'ats' && (
+          <div className="overflow-y-auto max-h-96 xl:max-h-none pb-4">
+            <AtsScorer
+              resumeId={id}
+              sections={sections}
+              targetRole={resumeJson?.metadata?.targetRole}
+              onSectionsUpdate={(updated) => set(updated)}
+            />
+          </div>
+        )}
+        </div>
+      )}
       </div>
 
       {/* Center Panel — Preview */}
-      <div className="flex-1 rounded-xl border border-[var(--border)] p-6 overflow-y-auto bg-[var(--muted)]/30">
+      <div className={`${mobileView !== 'preview' && 'hidden xl:block'} flex-1 rounded-xl border border-[var(--border)] p-4 sm:p-6 overflow-y-auto bg-[var(--muted)]/30`}>
         <div ref={printRef} id="resume-print-area">
           <ResumePreview
             key={resumeJson?.metadata?.selectedColorScheme || 'default'}
@@ -254,8 +356,46 @@ export default function ResumeBuilderPage() {
       </div>
 
       {/* Right Panel — Edit */}
-      <div className="w-80 shrink-0 rounded-xl border border-[var(--border)] p-4 overflow-y-auto">
-        <h3 className="text-sm font-semibold mb-3">{sectionLabels[selectedSection] || selectedSection}</h3>
+      <div className={`${!showRightPanel && 'hidden xl:block'} w-full xl:${rightPanelCollapsed ? 'w-12' : 'w-80'} shrink-0 rounded-xl border border-[var(--border)] ${rightPanelCollapsed ? 'p-2' : 'p-4'} overflow-y-auto max-h-[70vh] xl:max-h-none transition-all duration-200`}>
+        {/* Collapse toggle */}
+        <div className="hidden xl:flex items-center justify-between mb-2">
+          {!rightPanelCollapsed && (
+            <h3 className="text-sm font-semibold">{sectionLabels[selectedSection] || selectedSection}</h3>
+          )}
+          <div className="flex items-center gap-1">
+            <button onClick={() => setShowMobilePanel(showLeftPanel ? null : 'left')} className="xl:hidden text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+              Sections
+            </button>
+            <button
+              onClick={() => setRightPanelCollapsed(!rightPanelCollapsed)}
+              className="rounded p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)]"
+              title={rightPanelCollapsed ? 'Expand panel' : 'Collapse panel'}
+            >
+              <ChevronLeft className={`h-4 w-4 transition-transform ${rightPanelCollapsed ? '' : 'rotate-180'}`} />
+            </button>
+          </div>
+        </div>
+
+        {rightPanelCollapsed ? (
+          <div className="flex flex-col items-center gap-3 py-2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--primary)]/10 text-sm font-medium text-[var(--primary)]">
+              {(sectionLabels[selectedSection] || selectedSection).charAt(0)}
+            </div>
+            <button
+              onClick={() => setRightPanelCollapsed(false)}
+              className="rounded-lg p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)]"
+              title="Expand editor"
+            >
+              <PanelRight className="h-5 w-5" />
+            </button>
+          </div>
+        ) : (
+        <div className="space-y-4"><div className="flex items-center justify-between mb-3 xl:hidden">
+          <h3 className="text-sm font-semibold">{sectionLabels[selectedSection] || selectedSection}</h3>
+          <button onClick={() => setShowMobilePanel(showLeftPanel ? null : 'left')} className="xl:hidden text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+            Sections
+          </button>
+        </div>
         {currentSection ? (
           <SectionEditor
             sectionKey={selectedSection}
@@ -268,6 +408,7 @@ export default function ResumeBuilderPage() {
         ) : (
           <p className="text-sm text-[var(--muted-foreground)]">Select a section to edit</p>
         )}
+        </div>)}
       </div>
 
       {/* Saving indicator */}

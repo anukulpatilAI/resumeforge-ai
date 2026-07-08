@@ -8,10 +8,11 @@ import { ResumeModule } from './resume/resume.module';
 import { TemplatesModule } from './templates/templates.module';
 import { PdfModule } from './pdf/pdf.module';
 import { AssistantModule } from './assistant/assistant.module';
+import { AtsModule } from './ats/ats.module';
 import { HealthController } from './health.controller';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '../../.env' }), DatabaseModule, AuthModule, CareerProfileModule, UploadModule, ResumeModule, TemplatesModule, PdfModule, AssistantModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true, envFilePath: '../../.env' }), DatabaseModule, AuthModule, CareerProfileModule, UploadModule, ResumeModule, TemplatesModule, PdfModule, AssistantModule, AtsModule],
   controllers: [HealthController],
 })
 export class AppModule {}

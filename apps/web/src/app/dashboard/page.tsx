@@ -23,16 +23,16 @@ export default function DashboardPage() {
         <p className="mt-1 text-[var(--muted-foreground)]">Here&apos;s an overview of your resume building journey</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="rounded-xl border border-[var(--border)] p-6">
+            <div key={stat.label} className="rounded-xl border border-[var(--border)] p-4 sm:p-6">
               <div className="flex items-center gap-3">
-                <Icon className={`h-8 w-8 ${stat.color}`} />
-                <div>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-[var(--muted-foreground)]">{stat.label}</p>
+                <Icon className={`h-6 w-6 sm:h-8 sm:w-8 ${stat.color}`} />
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">{stat.value}</p>
+                  <p className="text-xs sm:text-sm text-[var(--muted-foreground)] truncate">{stat.label}</p>
                 </div>
               </div>
             </div>
@@ -40,9 +40,9 @@ export default function DashboardPage() {
         })}
       </div>
 
-      <div className="rounded-xl border border-[var(--border)] p-8 text-center">
-        <h2 className="text-xl font-semibold mb-2">Ready to build your resume?</h2>
-        <p className="text-[var(--muted-foreground)] mb-6">Create your first resume in minutes with AI assistance</p>
+      <div className="rounded-xl border border-[var(--border)] p-6 sm:p-8 text-center">
+        <h2 className="text-lg sm:text-xl font-semibold mb-2">Ready to build your resume?</h2>
+        <p className="text-sm sm:text-base text-[var(--muted-foreground)] mb-6">Create your first resume in minutes with AI assistance</p>
         <button
           onClick={() => router.push('/dashboard/resumes')}
           className="inline-flex items-center gap-2 rounded-lg bg-[var(--primary)] px-6 py-3 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90"

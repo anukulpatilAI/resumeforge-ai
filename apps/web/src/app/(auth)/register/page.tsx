@@ -32,7 +32,7 @@ export default function RegisterPage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-2xl font-bold">Create your account</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">Create your account</h1>
         <p className="mt-2 text-sm text-[var(--muted-foreground)]">Start building ATS-friendly resumes</p>
       </div>
 

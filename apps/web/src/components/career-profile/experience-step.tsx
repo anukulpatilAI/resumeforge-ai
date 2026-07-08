@@ -66,12 +66,12 @@ export default function ExperienceStep() {
               <label className="block text-sm font-medium mb-1">Location</label>
               <input value={exp.location} onChange={(e) => update(exp.id, 'location', e.target.value)} placeholder="City, Country" className="w-full rounded-lg border border-[var(--border)] bg-transparent px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" />
             </div>
-            <div className="flex items-end gap-2">
-              <div className="flex-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
                 <label className="block text-sm font-medium mb-1">Start Date</label>
                 <input value={exp.startDate} onChange={(e) => update(exp.id, 'startDate', e.target.value)} placeholder="Jan 2022" className="w-full rounded-lg border border-[var(--border)] bg-transparent px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" />
               </div>
-              <div className="flex-1">
+              <div>
                 <label className="block text-sm font-medium mb-1">End Date</label>
                 <input value={exp.endDate} onChange={(e) => update(exp.id, 'endDate', e.target.value)} placeholder="Present" className="w-full rounded-lg border border-[var(--border)] bg-transparent px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" disabled={exp.isCurrent} />
               </div>

@@ -35,11 +35,11 @@ export default function SkillsStep() {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Skills</h2>
 
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-2">
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+          className="w-full sm:w-auto rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
         >
           {categories.map((c) => (
             <option key={c} value={c}>{c}</option>
@@ -50,9 +50,9 @@ export default function SkillsStep() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && add()}
           placeholder="Type a skill and press Enter"
-          className="flex-1 rounded-lg border border-[var(--border)] bg-transparent px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+          className="flex-1 w-full rounded-lg border border-[var(--border)] bg-transparent px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
         />
-        <button onClick={add} className="rounded-lg bg-[var(--primary)] px-3 py-2 text-sm text-[var(--primary-foreground)]">
+        <button onClick={add} className="w-full sm:w-auto rounded-lg bg-[var(--primary)] px-3 py-2 text-sm text-[var(--primary-foreground)]">
           <Plus className="h-4 w-4" />
         </button>
       </div>

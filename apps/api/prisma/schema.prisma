@@ -232,3 +232,17 @@ model ProjectBlueprint {
   @@index([role, technology])
   @@map("project_blueprints")
 }
+
+model RoleKeyword {
+  id        String   @id @default(uuid()) @db.Uuid
+  role      String
+  category  String
+  keyword   String
+  aliases   Json     @default("[]") @db.JsonB
+  weight    Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([role])
+  @@index([role, category])
+  @@map("role_keywords")
+}

@@ -29,12 +29,12 @@ export default function ResumesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">My Resumes</h1>
           <p className="text-sm text-[var(--muted-foreground)]">Create and manage your resumes</p>
         </div>
-        <button onClick={handleCreate} className="flex items-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90">
+        <button onClick={handleCreate} className="flex items-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90 w-full sm:w-auto justify-center">
           <Plus className="h-4 w-4" /> New Resume
         </button>
       </div>
